@@ -10,7 +10,7 @@
         tools:context=".LoginMainActivity">
 
     <ImageView
-            android:id="@+id/splash_logo"
+            android:id="@+id/logo"
             android:layout_width="208dp"
             android:layout_height="231dp"
             android:scaleType="centerInside"
@@ -18,16 +18,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/splash_btn_layout"/>
+            app:layout_constraintBottom_toTopOf="@id/btn_layout"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/splash_btn_layout"
+            android:id="@+id/btn_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/splash_logo"
-            app:layout_constraintBottom_toTopOf="@id/splash_terms_layout">
+            app:layout_constraintTop_toBottomOf="@id/logo"
+            app:layout_constraintBottom_toTopOf="@id/terms_layout">
         <TextView
-                android:id="@+id/splash_btn_text"
+                android:id="@+id/btn_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Welcome !"
@@ -40,16 +40,16 @@
         <androidx.appcompat.widget.AppCompatButton
                 android:layout_marginTop="24dp"
                 android:background="@drawable/outline_button_shape"
-                android:id="@+id/splash_btn_join"
+                android:id="@+id/btn_join"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:textSize="20sp"
                 android:textColor="@color/primary"
                 android:fontFamily="@font/bold"
-                app:layout_constraintTop_toBottomOf="@id/splash_btn_text"
+                app:layout_constraintTop_toBottomOf="@id/btn_text"
                 android:text="가입"/>
         <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/splash_btn_login"
+                android:id="@+id/btn_login"
                 android:background="@drawable/solid_button_shape"
                 android:layout_width="match_parent"
                 android:layout_marginTop="16dp"
@@ -57,14 +57,14 @@
                 android:textSize="20sp"
                 android:textColor="@color/inverse_text"
                 android:fontFamily="@font/bold"
-                app:layout_constraintTop_toBottomOf="@id/splash_btn_join"
+                app:layout_constraintTop_toBottomOf="@id/btn_join"
                 android:text="로그인"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/splash_terms_layout"
+            android:id="@+id/terms_layout"
             app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView

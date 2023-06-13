@@ -1,5 +1,6 @@
 package com.daryukim.plancation
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -13,8 +14,12 @@ class LoginMainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.splashBtnLogin.setOnClickListener {
-            Toast.makeText(this, "Login!", Toast.LENGTH_SHORT).show()
+        binding.btnLogin.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+
+        binding.btnJoin.setOnClickListener {
+            Toast.makeText(this, "Join!", Toast.LENGTH_SHORT).show()
         }
     }
 }

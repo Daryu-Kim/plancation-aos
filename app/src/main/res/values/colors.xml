@@ -13,4 +13,5 @@
     <color name="inverse_text">#FFF</color>
     <color name="text">#161625</color>
     <color name="hint_text">#80494B7C</color>
+    <color name="accent">#735BF2</color>
 </resources>

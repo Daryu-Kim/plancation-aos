@@ -14,5 +14,6 @@
         <item name="android:background">@color/light_bg</item>
         <item name="android:includeFontPadding">false</item>
         <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/accent</item>
     </style>
 </resources>
