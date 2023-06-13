@@ -163,6 +163,7 @@
                     android:textSize="12sp"/>
             <Space android:layout_width="12dp" android:layout_height="match_parent"/>
             <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/social_join_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"

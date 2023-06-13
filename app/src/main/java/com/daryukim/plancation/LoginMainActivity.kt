@@ -19,7 +19,7 @@ class LoginMainActivity : AppCompatActivity() {
         }
 
         binding.btnJoin.setOnClickListener {
-            Toast.makeText(this, "Join!", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, JoinActivity::class.java))
         }
     }
 }

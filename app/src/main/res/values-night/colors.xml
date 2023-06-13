@@ -14,4 +14,5 @@
     <color name="inverse_text">#161625</color>
     <color name="hint_text">#B38F91C7</color>
     <color name="accent">#735BF2</color>
+    <color name="inverse_primary">#494B7C</color>
 </resources>

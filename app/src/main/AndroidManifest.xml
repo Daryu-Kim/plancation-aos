@@ -22,11 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".MainActivity"
-                android:exported="true"/>
+        <activity android:name=".MainActivity" android:exported="true"/>
         <activity android:name=".LoginMainActivity" android:exported="true"/>
         <activity android:name=".LoginActivity" android:exported="true"/>
+        <activity android:name=".JoinActivity" android:exported="true"/>
+        <activity android:name=".FindPWActivity" android:exported="true"/>
     </application>
 
 </manifest>
