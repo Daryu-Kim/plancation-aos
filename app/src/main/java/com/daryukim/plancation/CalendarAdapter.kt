@@ -1,0 +1,104 @@
+package com.daryukim.plancation
+
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.os.Build
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
+import java.time.LocalDate
+
+class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
+
+  private var dayList: ArrayList<LocalDate> = ArrayList()
+  private var lastSelectedPosition: Int = -1
+  @RequiresApi(Build.VERSION_CODES.O)
+  private var lastSelectedDate: LocalDate = LocalDate.of(1,1,1)
+
+  init {
+    this.dayList = dayList
+  }
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
+    val itemView = LayoutInflater.from(parent.context).inflate(R.layout.calendar_cell, parent, false)
+    return CalendarViewHolder(itemView)
+  }
+
+  override fun getItemCount(): Int {
+    return dayList.size
+  }
+
+  @SuppressLint("ResourceAsColor", "NotifyDataSetChanged")
+  @RequiresApi(Build.VERSION_CODES.O)
+  override fun onBindViewHolder(holder: CalendarViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    val day: LocalDate = dayList[position]
+
+    Log.d("Date", "Request Date is " + CalendarUtil.selectedDate)
+    if (day.year == 1) {
+      holder.dayTextView.text = ""
+    } else {
+      holder.dayTextView.text = day.dayOfMonth.toString()
+    }
+
+    if (LocalDate.now() == day) {
+      holder.dayLayout.setBackgroundResource(R.drawable.calendar_border_day)
+      holder.dayTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.text))
+    }
+    else if (CalendarUtil.selectedDate == day) {
+      holder.dayLayout.setBackgroundResource(R.drawable.calendar_solid_day)
+      holder.dayTextView.setTextColor(Color.WHITE)
+    } else {
+      holder.dayLayout.background = null
+      holder.dayTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.text))
+    }
+
+    if ((position + 1) % 7 == 0) {
+      if (CalendarUtil.selectedDate == day) {
+        holder.dayTextView.setTextColor(Color.WHITE)
+      } else {
+        holder.dayTextView.setTextColor(Color.BLUE)
+      }
+
+    } else if (position == 0 || position % 7 == 0) {
+      if (CalendarUtil.selectedDate == day) {
+        holder.dayTextView.setTextColor(Color.WHITE)
+      } else {
+        holder.dayTextView.setTextColor(Color.RED)
+      }
+
+    }
+
+    holder.itemView.setOnClickListener(View.OnClickListener {
+      if (day.year != 1) {
+        val iYear = day.year
+        val iMonth = day.month
+        val iDay = day.dayOfMonth
+        val yearMonDay: String = iYear.toString() + "년 " + iMonth.toString() + "월 " + iDay.toString() + "일"
+
+        if (lastSelectedPosition != -1) {
+          notifyItemChanged(lastSelectedPosition)
+        }
+        CalendarUtil.selectedDate = day
+
+        holder.dayLayout.setBackgroundResource(R.drawable.calendar_solid_day)
+        holder.dayTextView.setTextColor(Color.WHITE)
+        lastSelectedPosition = position
+        lastSelectedDate = day
+
+        CalendarUtil.isDateClicked = true
+        Toast.makeText(holder.itemView.context, yearMonDay, Toast.LENGTH_SHORT).show()
+      }
+    })
+  }
+
+  inner class CalendarViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    val dayTextView: TextView = itemView.findViewById<TextView>(R.id.day_text)
+    val dayLayout: View = itemView.findViewById(R.id.day_layout)
+  }
+}
