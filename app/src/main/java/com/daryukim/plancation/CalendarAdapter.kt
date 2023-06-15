@@ -13,16 +13,17 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
+import kotlin.properties.Delegates
 
 class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
   private var dayList: ArrayList<LocalDate> = ArrayList()
-  private var lastSelectedPosition: Int = -1
-  @RequiresApi(Build.VERSION_CODES.O)
+  private var lastSelectedPosition = -1
   private var lastSelectedDate: LocalDate = LocalDate.of(1,1,1)
 
   init {
     this.dayList = dayList
+    lastSelectedPosition = dayList.indexOf(CalendarUtil.selectedDate.value)
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
@@ -35,7 +36,6 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
   }
 
   @SuppressLint("ResourceAsColor", "NotifyDataSetChanged")
-  @RequiresApi(Build.VERSION_CODES.O)
   override fun onBindViewHolder(holder: CalendarViewHolder, @SuppressLint("RecyclerView") position: Int) {
     val day: LocalDate = dayList[position]
 
@@ -50,7 +50,7 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
       holder.dayLayout.setBackgroundResource(R.drawable.calendar_border_day)
       holder.dayTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.text))
     }
-    else if (CalendarUtil.selectedDate == day) {
+    else if (CalendarUtil.selectedDate.value == day) {
       holder.dayLayout.setBackgroundResource(R.drawable.calendar_solid_day)
       holder.dayTextView.setTextColor(Color.WHITE)
     } else {
@@ -59,14 +59,14 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
     }
 
     if ((position + 1) % 7 == 0) {
-      if (CalendarUtil.selectedDate == day) {
+      if (CalendarUtil.selectedDate.value == day) {
         holder.dayTextView.setTextColor(Color.WHITE)
       } else {
         holder.dayTextView.setTextColor(Color.BLUE)
       }
 
     } else if (position == 0 || position % 7 == 0) {
-      if (CalendarUtil.selectedDate == day) {
+      if (CalendarUtil.selectedDate.value == day) {
         holder.dayTextView.setTextColor(Color.WHITE)
       } else {
         holder.dayTextView.setTextColor(Color.RED)
@@ -84,15 +84,12 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
         if (lastSelectedPosition != -1) {
           notifyItemChanged(lastSelectedPosition)
         }
-        CalendarUtil.selectedDate = day
+        CalendarUtil.selectedDate.value = day
 
         holder.dayLayout.setBackgroundResource(R.drawable.calendar_solid_day)
         holder.dayTextView.setTextColor(Color.WHITE)
         lastSelectedPosition = position
         lastSelectedDate = day
-
-        CalendarUtil.isDateClicked = true
-        Toast.makeText(holder.itemView.context, yearMonDay, Toast.LENGTH_SHORT).show()
       }
     })
   }

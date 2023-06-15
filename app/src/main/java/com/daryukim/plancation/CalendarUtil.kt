@@ -1,13 +1,14 @@
 package com.daryukim.plancation
 
+import androidx.lifecycle.MutableLiveData
 import java.time.LocalDate
+import kotlin.properties.Delegates
 
 data class CalendarUtil(
-  var selectedDate: LocalDate,
+  val selectedDate: MutableLiveData<LocalDate> = MutableLiveData(),
   var isDateClicked: Boolean
 ) {
   companion object {
-    lateinit var selectedDate: LocalDate
-    var isDateClicked: Boolean = false
+    val selectedDate: MutableLiveData<LocalDate> = MutableLiveData()
   }
 }

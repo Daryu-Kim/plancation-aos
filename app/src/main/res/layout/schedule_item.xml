@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:id="@+id/schedule_item_layout"
+        android:background="@drawable/schedule_shape"
+        android:backgroundTint="@color/inverse_primary"
+        android:orientation="vertical"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="16dp"
+        android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@android:color/transparent"
+                  android:orientation="horizontal">
+        <ImageView android:layout_width="12dp" android:layout_height="12dp"
+                   android:layout_gravity="center_vertical"
+                   android:background="@drawable/accent_ring"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="D-1"
+                  android:layout_marginStart="4dp"
+                  android:background="@android:color/transparent"
+                  android:textColor="@color/hint_text"
+                  android:textSize="14sp"
+                  android:layout_gravity="center_vertical"
+                  android:fontFamily="@font/bold"/>
+    </LinearLayout>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/schedule_item_title"
+              android:background="@android:color/transparent"
+              android:text="정보처리기사 필기 시험"
+              android:textColor="@color/text"
+              android:layout_marginTop="2dp"
+              android:textSize="16sp"
+              android:fontFamily="@font/bold"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/schedule_item_location"
+              android:background="@android:color/transparent"
+              android:layout_marginTop="2dp"
+              android:text="장소: 한국능력개발원"
+              android:textSize="12sp"
+              android:textColor="@color/hint_text"
+              android:fontFamily="@font/bold"/>
+</LinearLayout>

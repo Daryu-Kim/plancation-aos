@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val selectedFragment: Fragment = when (item.itemId) {
             R.id.nav_calendar -> CalendarFragment()
+            R.id.nav_todo -> TodoFragment()
             else -> CalendarFragment()
         }
         loadFragment(selectedFragment)
