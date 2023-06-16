@@ -1,16 +1,17 @@
 package com.daryukim.plancation
 
-import java.time.LocalDate
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.GeoPoint
 
-class ScheduleModel(
-  val eventID: String,
-  val eventSTime: LocalDate,
-  val eventETime: LocalDate,
-  val eventUsers: ArrayList<String>,
-  val eventAlerts: ArrayList<ScheduleAlertModel>,
-  val eventAuthorID: String,
-  val eventIsTodo: Boolean,
-  val eventCheckUsers: ArrayList<String>,
-  val eventBackgroundColor: ScheduleColorModel
-) {
-}
+data class ScheduleModel(
+  val eventID: String = "",
+  val eventTitle: String = "",
+  val eventTime: Timestamp = Timestamp.now(),
+  val eventUsers: ArrayList<String> = ArrayList(),
+  val eventAlerts: Map<String, Any> = mapOf(),
+  val eventAuthorID: String = "",
+  val eventIsTodo: Boolean = false,
+  val eventCheckUsers: ArrayList<String> = ArrayList(),
+  val eventBackgroundColor: Map<String, Int> = mapOf(),
+  val eventLocation: GeoPoint = GeoPoint(0.0, 0.0)
+)

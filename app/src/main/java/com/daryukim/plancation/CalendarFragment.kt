@@ -4,23 +4,41 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.daryukim.plancation.databinding.FragmentCalendarBinding
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.lang.Exception
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class CalendarFragment: Fragment() {
   private var _binding: FragmentCalendarBinding? = null
   private val binding get() = _binding!!
+  private lateinit var db: FirebaseFirestore
+  private lateinit var scheduleList: ArrayList<ScheduleModel>
+  private lateinit var scheduleAdapter: ScheduleAdapter
 
   // 프래그먼트 생성 시 뷰 설정
   @SuppressLint("ClickableViewAccessibility")
@@ -29,17 +47,14 @@ class CalendarFragment: Fragment() {
     _binding = FragmentCalendarBinding.inflate(inflater, container, false)
     val view = binding.root
 
+    db = FirebaseFirestore.getInstance()
+    scheduleList = ArrayList()
+
     // 오늘의 날짜를 설정합니다.
     CalendarUtil.selectedDate.value = LocalDate.now()
 
-    // 로그에 오늘 날짜를 출력합니다.
-    Log.d("Date", "Current Date is " + CalendarUtil.selectedDate)
-
     // 월별 캘린더 뷰를 설정합니다.
     setMonthView()
-
-    // 토스트 메시지로 선택된 날짜를 표시합니다.
-    Toast.makeText(context, CalendarUtil.selectedDate.toString(), Toast.LENGTH_SHORT).show()
 
     // 날짜 터치에 따라 스와이프 방향을 계산하고 이전 달 또는 다음 달로 이동합니다.
     binding.calendarLayout.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
@@ -57,6 +72,11 @@ class CalendarFragment: Fragment() {
     // 선택된 날짜에 변화를 관찰하고, 변경 시 스케줄 날짜를 갱신합니다.
     CalendarUtil.selectedDate.observe(viewLifecycleOwner, Observer { value ->
       binding.scheduleDate.text = yearMonthFromDate(value)
+      fetchEventsDataFromFirestore { result ->
+        scheduleList.clear()
+        scheduleList.addAll(result)
+        setUpScheduleView()
+      }
     })
 
     return view
@@ -120,10 +140,66 @@ class CalendarFragment: Fragment() {
     binding.scheduleDate.text = yearMonthFromDate(CalendarUtil.selectedDate.value!!)
   }
 
+  private fun fetchEventsDataFromFirestore(onComplete: (List<ScheduleModel>) -> Unit) {
+    val date = CalendarUtil.selectedDate.value!!
+    val startDateTime: LocalDateTime = date.atStartOfDay()
+    val startDate: Date = Date.from(startDateTime.atZone(ZoneId.systemDefault()).toInstant())
+    val endLocalDate: LocalDate = date.plusDays(1)
+    val endDateTime: LocalDateTime = endLocalDate.atStartOfDay()
+    val endDate: Date = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant())
+
+    db.collection("Calendars")
+      .document("A9PHFsmDLUWbaYDdy2XX")
+      .collection("Events")
+      .whereEqualTo("eventIsTodo", false)
+      .whereGreaterThanOrEqualTo("eventTime", Timestamp(startDate))
+      .whereLessThan("eventTime", Timestamp(endDate))
+      .get()
+      .addOnCompleteListener(OnCompleteListener { task ->
+        if (task.isSuccessful) {
+          val events = task.result?.toObjects(ScheduleModel::class.java)
+          if (events != null) {
+            onComplete(events)
+          } else {
+            onComplete(emptyList())
+          }
+        } else {
+          print(("Error"))
+          onComplete(emptyList())
+        }
+      })
+  }
+
+  @SuppressLint("ClickableViewAccessibility")
+  private fun setUpScheduleView() {
+    binding.calendarScheduleView.apply {
+      layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+      adapter = ScheduleAdapter(scheduleList)
+    }
+  }
+
   // 날짜로부터 년/월을 반환합니다.
   private fun yearMonthFromDate(date: LocalDate): String {
     // DateTimeFormatter를 이용하여 날짜를 문자열로 변환합니다.
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("M월 d일 EEEE")
     return date.format(formatter)
+  }
+
+  override fun onContextItemSelected(item: MenuItem): Boolean {
+    val position = item.groupId
+    when (item.itemId) {
+      0 -> {
+        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+        // 수정 버튼
+        return true
+      }
+      1 -> {
+        // 삭제 버튼
+        scheduleList.removeAt(position)
+        setUpScheduleView()
+        return true
+      }
+      else -> return super.onContextItemSelected(item)
+    }
   }
 }

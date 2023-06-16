@@ -2,18 +2,14 @@ package com.daryukim.plancation
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
-import kotlin.properties.Delegates
 
 class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
 
@@ -76,11 +72,6 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
 
     holder.itemView.setOnClickListener(View.OnClickListener {
       if (day.year != 1) {
-        val iYear = day.year
-        val iMonth = day.month
-        val iDay = day.dayOfMonth
-        val yearMonDay: String = iYear.toString() + "년 " + iMonth.toString() + "월 " + iDay.toString() + "일"
-
         if (lastSelectedPosition != -1) {
           notifyItemChanged(lastSelectedPosition)
         }
