@@ -55,19 +55,10 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
     }
 
     if ((position + 1) % 7 == 0) {
-      if (CalendarUtil.selectedDate.value == day) {
-        holder.dayTextView.setTextColor(Color.WHITE)
-      } else {
-        holder.dayTextView.setTextColor(Color.BLUE)
-      }
+      holder.dayTextView.setTextColor(Color.BLUE)
 
     } else if (position == 0 || position % 7 == 0) {
-      if (CalendarUtil.selectedDate.value == day) {
-        holder.dayTextView.setTextColor(Color.WHITE)
-      } else {
-        holder.dayTextView.setTextColor(Color.RED)
-      }
-
+      holder.dayTextView.setTextColor(Color.RED)
     }
 
     holder.itemView.setOnClickListener(View.OnClickListener {

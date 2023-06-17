@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/schedule_form"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/form_shape"
+            android:paddingHorizontal="32dp"
+            android:id="@+id/schedule_form_bar_layout"
+            android:paddingVertical="16dp">
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/schedule_form_bar_cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="취소"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:fontFamily="@font/medium"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/schedule_form_bar_title"
+                  android:text="이벤트 수정"
+                  app:layout_constraintTop_toTopOf="parent"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:textColor="@color/white"
+                  android:textSize="16sp"
+                  android:fontFamily="@font/bold"/>
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/schedule_form_bar_submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="완료"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:fontFamily="@font/medium"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="16dp"
+            android:orientation="vertical">
+        <EditText android:layout_width="match_parent" android:layout_height="42dp"
+                  android:id="@+id/schedule_form_content_title"
+                  android:background="@drawable/form_edittext"
+                  android:hint="일정 제목"
+                  android:textColorHint="@color/hint_text"
+                  android:textColor="@color/text"
+                  android:fontFamily="@font/bold"
+                  android:textSize="12sp"
+                  android:paddingHorizontal="16dp"/>
+
+        <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/form_border"
+                android:stretchColumns="0, 2">
+            <TableRow>
+                <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="0dp"
+                        android:background="@drawable/form_left_button_selector"
+                        android:enabled="false"
+                        android:textSize="12sp"
+                        android:textColor="@color/form_left_button_text"
+                        android:fontFamily="@font/bold"
+                        android:minHeight="32dp"
+                        android:text="하루종일"/>
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/hint_text"/>
+                <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="0dp"
+                        android:enabled="true"
+                        android:background="@drawable/form_right_button_selector"
+                        android:textSize="12sp"
+                        android:textColor="@color/form_right_button_text"
+                        android:fontFamily="@font/bold"
+                        android:minHeight="32dp"
+                        android:text="구간설정"/>
+            </TableRow>
+            <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/hint_text"/>
+            <TableRow>
+                <LinearLayout
+                        android:layout_height="64dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="시작"
+                            android:enabled="false"
+                            android:textColor="@color/form_button_text"
+                            android:fontFamily="@font/bold"
+                            android:textSize="14sp"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:enabled="false"
+                            android:fontFamily="@font/medium"
+                            android:text="2023년 4월 5일 수요일"
+                            android:textColor="@color/form_button_text"
+                            android:textSize="12sp"/>
+                </LinearLayout>
+
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/hint_text"/>
+                <LinearLayout
+                        android:layout_height="64dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="종료"
+                            android:enabled="false"
+                            android:textColor="@color/form_button_text"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/bold"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="2023년 4월 5일 수요일"
+                            android:enabled="false"
+                            android:textColor="@color/form_button_text"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/medium"/>
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/form_edittext">
+            <EditText android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:background="@android:color/transparent"
+                      android:id="@+id/schedule_form_content_location_edittext"
+                      android:hint="장소"
+                      android:layout_marginEnd="8dp"
+                      android:textColorHint="@color/hint_text"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      app:layout_constraintRight_toLeftOf="@id/schedule_form_content_location_button"
+                      android:textColor="@color/text"
+                      android:textSize="12sp"
+                      android:fontFamily="@font/bold"/>
+            <ImageButton
+                    android:id="@+id/schedule_form_content_location_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:background="@drawable/ic_search"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/form_edittext">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      android:text="배경 / 마커 색상"
+                      android:textColor="@color/text"
+                      android:textSize="12sp"
+                      android:fontFamily="@font/bold"/>
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       app:layout_constraintTop_toTopOf="parent"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintRight_toRightOf="parent"
+                       android:background="@drawable/ic_color"
+                       android:backgroundTint="@color/primary"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/form_edittext">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      android:text="반복 설정"
+                      android:textColor="@color/text"
+                      android:textSize="12sp"
+                      android:fontFamily="@font/bold"/>
+            <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:background="@android:color/transparent"
+                    android:text="없음"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/bold"
+                    android:textColor="@color/hint_text"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/form_edittext">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      android:text="알림"
+                      android:textColor="@color/text"
+                      android:textSize="12sp"
+                      android:fontFamily="@font/bold"/>
+            <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:background="@android:color/transparent"
+                    android:text="없음"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/bold"
+                    android:textColor="@color/hint_text"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

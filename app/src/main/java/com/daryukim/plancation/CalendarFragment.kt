@@ -79,6 +79,14 @@ class CalendarFragment: Fragment() {
       }
     })
 
+    binding.scheduleAddButton.setOnClickListener {
+      val scheduleFormFragment = ScheduleFormFragment.newInstance(
+        isModify = false,
+        data = ScheduleModel()
+      )
+      scheduleFormFragment.show(childFragmentManager, scheduleFormFragment.tag)
+    }
+
     return view
   }
 
@@ -157,9 +165,12 @@ class CalendarFragment: Fragment() {
       .get()
       .addOnCompleteListener(OnCompleteListener { task ->
         if (task.isSuccessful) {
-          val events = task.result?.toObjects(ScheduleModel::class.java)
+          val events = task.result
           if (events != null) {
-            onComplete(events)
+            val scheduleModelList = events.documents.map {documentSnapshot ->
+              ScheduleModel.fromDocument(documentSnapshot)
+            }
+            onComplete(scheduleModelList)
           } else {
             onComplete(emptyList())
           }
@@ -172,10 +183,12 @@ class CalendarFragment: Fragment() {
 
   @SuppressLint("ClickableViewAccessibility")
   private fun setUpScheduleView() {
+    scheduleAdapter = ScheduleAdapter(scheduleList)
     binding.calendarScheduleView.apply {
       layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-      adapter = ScheduleAdapter(scheduleList)
+      adapter = scheduleAdapter
     }
+    checkEmptyList()
   }
 
   // 날짜로부터 년/월을 반환합니다.
@@ -185,18 +198,39 @@ class CalendarFragment: Fragment() {
     return date.format(formatter)
   }
 
+  private fun checkEmptyList() {
+    if (scheduleAdapter.itemCount == 0) { // 항목이 없는 경우
+      binding.scheduleEmptyLayout.visibility = View.VISIBLE
+    } else {
+      binding.scheduleEmptyLayout.visibility = View.GONE
+    }
+  }
+
+  @SuppressLint("NotifyDataSetChanged")
+  private fun updateData(data: List<Any>) { // List<Any>를 사용 중인 데이터 타입으로 변경해주세요.
+    // 여기서 데이터를 업데이트하고, 어댑터에 알립니다.
+    scheduleAdapter.notifyDataSetChanged()
+
+    // 이후에 데이터 상태를 확인하여 TextView의 가시성을 다시 설정합니다.
+    checkEmptyList()
+  }
+
   override fun onContextItemSelected(item: MenuItem): Boolean {
     val position = item.groupId
     when (item.itemId) {
       0 -> {
-        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
+        val scheduleFormFragment = ScheduleFormFragment.newInstance(
+          isModify = true,
+          data = scheduleList[position]
+        )
+        scheduleFormFragment.show(childFragmentManager, scheduleFormFragment.tag)
         // 수정 버튼
         return true
       }
       1 -> {
         // 삭제 버튼
         scheduleList.removeAt(position)
-        setUpScheduleView()
+        updateData(scheduleList)
         return true
       }
       else -> return super.onContextItemSelected(item)

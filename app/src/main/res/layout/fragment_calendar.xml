@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:background="@color/background"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -95,10 +96,35 @@
                       android:textColor="@color/text"
                       android:fontFamily="@font/bold"
                       android:textSize="14sp"/>
-            <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
-                                                       android:layout_height="match_parent"
-                                                       android:layout_marginTop="12dp"
-                                                       android:id="@+id/calendar_schedule_view"/>
+            <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+                                                               android:layout_height="match_parent"
+                                                               android:layout_marginTop="12dp">
+                <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                           android:layout_height="match_parent"
+                                                           android:id="@+id/calendar_schedule_view"/>
+
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:id="@+id/schedule_empty_layout"
+                              android:visibility="gone"
+                              app:layout_constraintTop_toTopOf="parent"
+                              app:layout_constraintBottom_toBottomOf="parent"
+                              app:layout_constraintStart_toStartOf="parent"
+                              app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center">
+                    <ImageView android:layout_width="32dp" android:layout_height="32dp"
+                               android:background="@drawable/ic_info"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:text="일정이 없습니다!"
+                              android:layout_marginTop="4dp"
+                              android:textSize="18sp"
+                              android:fontFamily="@font/bold"
+                              android:textColor="@color/primary"/>
+                </LinearLayout>
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
 
@@ -108,7 +134,15 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/calendar_add_button"
+            android:id="@+id/schedule_add_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_schedule_add"
+            app:tint="@color/white"
+            app:maxImageSize="28dp"
+            app:backgroundTint="@color/primary"
             app:fabSize="normal"/>
 
 

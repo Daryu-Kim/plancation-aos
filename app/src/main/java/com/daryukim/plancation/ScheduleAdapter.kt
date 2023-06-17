@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.location.Geocoder
+import android.util.Log
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.ZoneId
@@ -24,9 +30,20 @@ class ScheduleAdapter(
   private val scheduleList: List<ScheduleModel>,
 ) :
   RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
+  private val googleReverseGeocodingApi: GoogleReverseGeocodingApi
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
     val itemView = LayoutInflater.from(parent.context).inflate(R.layout.schedule_item, parent, false)
     return ScheduleViewHolder(itemView)
+  }
+
+  init {
+    val retrofit = Retrofit.Builder()
+      .baseUrl("https://maps.googleapis.com")
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+
+    googleReverseGeocodingApi = retrofit.create(GoogleReverseGeocodingApi::class.java)
   }
 
   override fun getItemCount(): Int {
@@ -38,7 +55,7 @@ class ScheduleAdapter(
     val schedule = scheduleList[position]
     val scheduleDate = schedule.eventTime.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     val scheduleDDay = DAYS.between(LocalDate.now(), scheduleDate)
-    val geocoder = Geocoder(holder.itemView.context, Locale.getDefault())
+    val scheduleGeoPoint = schedule.eventLocation.geoPoint
 
     holder.itemLayout.setCustomBackgroundTint(schedule.eventBackgroundColor)
     holder.itemTitle.text = schedule.eventTitle
@@ -47,18 +64,7 @@ class ScheduleAdapter(
       scheduleDDay > 0 -> holder.itemDate.text = "D-$scheduleDDay"
       else -> holder.itemDate.text = "이미 지난 날짜입니다!"
     }
-    try {
-      val addresses = geocoder.getFromLocation(schedule.eventLocation.latitude, schedule.eventLocation.longitude, 1)
-      if (addresses!!.isNotEmpty()) {
-        val address = addresses[0]
-        val placeAddress = address.getAddressLine(0)
-        holder.itemLocation.text = "장소: $placeAddress"
-      } else {
-        holder.itemLocation.text = "장소를 지정하지 않았습니다!"
-      }
-    } catch (e: Exception) {
-      e.printStackTrace()
-    }
+    fetchAddressFromCoordinates(holder, scheduleGeoPoint.latitude, scheduleGeoPoint.longitude)
     holder.itemView.setOnClickListener(View.OnClickListener {
       Toast.makeText(holder.itemView.context, schedule.eventTitle, Toast.LENGTH_SHORT).show()
     })
@@ -87,4 +93,36 @@ class ScheduleAdapter(
     val tempColorStateList = ColorStateList.valueOf(tempColor)
     return ViewCompat.setBackgroundTintList(this, tempColorStateList)
   }
+
+  private fun fetchAddressFromCoordinates(holder: ScheduleAdapter.ScheduleViewHolder, latitude: Double, longitude: Double) {
+    val apiKey = "AIzaSyDbUGBM3TEQKIR_Nah01_d8cxUq9eFdS3I"
+    val language = "ko"
+
+    googleReverseGeocodingApi.getGeocode("$latitude,$longitude", apiKey, language).enqueue(object: Callback<ReverseGeocodingResponse> {
+      override fun onResponse(call: Call<ReverseGeocodingResponse>, response: Response<ReverseGeocodingResponse>) {
+        if (response.isSuccessful) {
+          val geocodingResponse = response.body()
+          val result = geocodingResponse?.results?.firstOrNull()
+
+          if (result != null) {
+            val address = result.formatted_address
+            Log.d("Geocoding", "Full Address: $address")
+            holder.itemLocation.text = "장소: $address"
+          } else {
+            Log.d("Geocoding", "No address found for the coordinates.")
+            holder.itemLocation.text = "장소를 지정하지 않았습니다!"
+          }
+        } else {
+          Log.d("Geocoding", "Error occurred: ${response.errorBody()?.string()}")
+          holder.itemLocation.text = "장소를 지정하지 않았습니다!"
+        }
+      }
+
+      override fun onFailure(call: Call<ReverseGeocodingResponse>, t: Throwable) {
+        Log.d("Geocoding", "Failed to get geocoding result: $t")
+        holder.itemLocation.text = "장소를 지정하지 않았습니다!"
+      }
+    })
+  }
+
 }

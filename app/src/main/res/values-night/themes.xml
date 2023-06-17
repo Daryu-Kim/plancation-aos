@@ -11,10 +11,21 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <item name="android:background">@color/dark_bg</item>
+<!--        <item name="android:background">@color/dark_bg</item>-->
         <item name="android:includeFontPadding">false</item>
 
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="BottomSheetDialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+        <item name="bottomSheetStyle">@style/BottomSheetRoundedStyle</item>
+    </style>
+
+    <style name="BottomSheetRoundedStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/form_shape</item>
     </style>
 </resources>
