@@ -1,14 +1,14 @@
 package com.daryukim.plancation
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.daryukim.plancation.databinding.FragmentScheduleFormBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import retrofit2.Call
@@ -16,6 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import yuku.ambilwarna.AmbilWarnaDialog
 
 class ScheduleFormFragment: BottomSheetDialogFragment() {
   private val googleGeocodingApi: GoogleGeocodingApi
@@ -72,6 +73,10 @@ class ScheduleFormFragment: BottomSheetDialogFragment() {
       fetchCoordinatesFromAddress(binding.scheduleFormContentLocationEdittext.text.toString())
     }
 
+    binding.scheduleFormContentColorButton.setOnClickListener {
+      showColorPickerDialog()
+    }
+
     return view
   }
 
@@ -101,6 +106,51 @@ class ScheduleFormFragment: BottomSheetDialogFragment() {
         Log.d("Geocoding", "Failed to get geocoding result: $t")
       }
     })
+  }
+
+  private fun showColorPickerDialog() {
+    val dataColor = data.eventBackgroundColor.toMutableMap()
+    val initialColor = argbToHexInt(
+      dataColor["alphaColor"],
+      dataColor["redColor"],
+      dataColor["greenColor"],
+      dataColor["blueColor"]
+    )
+    val ambilWarnaDialog = AmbilWarnaDialog(requireContext(), initialColor, object : AmbilWarnaDialog.OnAmbilWarnaListener {
+      override fun onCancel(dialog: AmbilWarnaDialog) {
+        // 취소 버튼을 클릭했을 때 수행할 작업을 여기에 작성합니다.
+      }
+
+      override fun onOk(dialog: AmbilWarnaDialog, color: Int) {
+        // 확인 버튼을 클릭했을 때 수행할 작업을 여기에 작성합니다.
+        dataColor["alphaColor"] = Color.alpha(color)
+        dataColor["redColor"] = Color.red(color)
+        dataColor["greenColor"] = Color.green(color)
+        dataColor["blueColor"] = Color.blue(color)
+        data = data.copy(eventBackgroundColor = dataColor)
+        Log.d("Color", dataColor.toString())
+        Log.d("Color", data.eventBackgroundColor.toString())
+        binding.scheduleFormContentColorButton.backgroundTintList = ColorStateList.valueOf(
+          Color.argb(
+            dataColor["alphaColor"]!!,
+            dataColor["redColor"]!!,
+            dataColor["greenColor"]!!,
+            dataColor["blueColor"]!!
+          )
+        )
+        // 예를 들어, TextView의 배경 색상을 변경할 수 있습니다.
+        // textView.setBackgroundColor(color)
+      }
+    })
+    ambilWarnaDialog.show()
+  }
+
+  private fun argbToHexInt(alpha: Int?, red: Int?, green: Int?, blue: Int?): Int {
+    return if (alpha != null && red != null && green != null && blue != null) {
+      (alpha shl 24) or (red shl 16) or (green shl 8) or blue
+    } else {
+      -0x1000
+    }
   }
 
   companion object {

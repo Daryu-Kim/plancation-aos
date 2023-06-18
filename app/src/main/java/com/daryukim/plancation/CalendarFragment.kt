@@ -79,7 +79,7 @@ class CalendarFragment: Fragment() {
       }
     })
 
-    binding.scheduleAddButton.setOnClickListener {
+    binding.scheduleAddButton.setOnClickListener {_ ->
       val scheduleFormFragment = ScheduleFormFragment.newInstance(
         isModify = false,
         data = ScheduleModel()
