@@ -28,4 +28,8 @@
     <style name="BottomSheetRoundedStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/form_shape</item>
     </style>
+
+    <style name="DatePickerTheme" parent="android:ThemeOverlay.Material.Dark">
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
+    </style>
 </resources>

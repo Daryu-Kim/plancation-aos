@@ -33,14 +33,13 @@
         <item name="android:paddingHorizontal">16dp</item>
     </style>
 
-    <style name="DatePickerTheme" parent="ThemeOverlay.MaterialComponents.Dialog">
+    <style name="DatePickerTheme" parent="android:ThemeOverlay.Material.Light">
         <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
 
-    <style name="DatePickerStyle" parent="@android:style/Widget.Holo.DatePicker">
+    <style name="DatePickerStyle" parent="android:Widget.Material.DatePicker">
         <item name="android:calendarViewShown">false</item>
         <item name="android:datePickerMode">spinner</item>
-        <item name="android:headerBackground">@color/accent</item>
     </style>
 
 </resources>
