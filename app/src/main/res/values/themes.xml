@@ -27,4 +27,20 @@
     <style name="BottomSheetRoundedStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/form_shape</item>
     </style>
+
+    <style name="CustomSpinnerTheme">
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+    </style>
+
+    <style name="DatePickerTheme" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
+    </style>
+
+    <style name="DatePickerStyle" parent="@android:style/Widget.Holo.DatePicker">
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:headerBackground">@color/accent</item>
+    </style>
+
 </resources>

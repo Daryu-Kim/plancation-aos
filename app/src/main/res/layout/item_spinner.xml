@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:id="@+id/spinner_layout"
+                  android:paddingVertical="8dp"
+                  android:gravity="center">
+        <ImageView
+                android:id="@+id/spinner_check_mark"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/ic_check"
+                android:backgroundTint="@color/accent"
+                android:layout_marginEnd="4dp"
+        android:visibility="invisible"/>
+
+        <TextView
+                android:id="@+id/spinner_text"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textAlignment="textEnd"
+                android:fontFamily="@font/bold"
+                android:textColor="@color/text"/>
+    </LinearLayout>
+    <View
+            android:id="@+id/spinner_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            android:background="@android:drawable/divider_horizontal_dark" />
+
+</LinearLayout>

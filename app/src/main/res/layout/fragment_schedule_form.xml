@@ -3,8 +3,9 @@
         android:id="@+id/schedule_form"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@android:color/transparent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,11 +79,11 @@
                 android:stretchColumns="0, 2">
             <TableRow>
                 <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/schedule_day_button"
                         android:layout_width="0dp"
-                        android:background="@drawable/form_left_button_selector"
-                        android:enabled="false"
+                        android:background="@drawable/form_left_button_shape"
                         android:textSize="12sp"
-                        android:textColor="@color/form_left_button_text"
+                        android:textColor="@color/white"
                         android:fontFamily="@font/bold"
                         android:minHeight="32dp"
                         android:text="하루종일"/>
@@ -91,11 +92,11 @@
                         android:layout_height="match_parent"
                         android:background="@color/hint_text"/>
                 <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/schedule_range_button"
                         android:layout_width="0dp"
-                        android:enabled="true"
-                        android:background="@drawable/form_right_button_selector"
+                        android:background="@android:color/transparent"
                         android:textSize="12sp"
-                        android:textColor="@color/form_right_button_text"
+                        android:textColor="@color/text"
                         android:fontFamily="@font/bold"
                         android:minHeight="32dp"
                         android:text="구간설정"/>
@@ -106,25 +107,26 @@
                     android:background="@color/hint_text"/>
             <TableRow>
                 <LinearLayout
+                        android:id="@+id/schedule_range_start_button"
                         android:layout_height="64dp"
                         android:gravity="center"
                         android:orientation="vertical">
                     <TextView
+                            android:id="@+id/schedule_range_start_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="시작"
-                            android:enabled="false"
-                            android:textColor="@color/form_button_text"
+                            android:textColor="@color/hint_text"
                             android:fontFamily="@font/bold"
                             android:textSize="14sp"/>
                     <TextView
+                            android:id="@+id/schedule_range_start_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:enabled="false"
                             android:fontFamily="@font/medium"
                             android:text="2023년 4월 5일 수요일"
-                            android:textColor="@color/form_button_text"
+                            android:textColor="@color/hint_text"
                             android:textSize="12sp"/>
                 </LinearLayout>
 
@@ -133,29 +135,41 @@
                         android:layout_height="match_parent"
                         android:background="@color/hint_text"/>
                 <LinearLayout
+                        android:id="@+id/schedule_range_end_button"
                         android:layout_height="64dp"
                         android:gravity="center"
                         android:orientation="vertical">
                     <TextView
+                            android:id="@+id/schedule_range_end_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="종료"
-                            android:enabled="false"
-                            android:textColor="@color/form_button_text"
+                            android:textColor="@color/hint_text"
                             android:textSize="14sp"
                             android:fontFamily="@font/bold"/>
                     <TextView
+                            android:id="@+id/schedule_range_end_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="2023년 4월 5일 수요일"
-                            android:enabled="false"
-                            android:textColor="@color/form_button_text"
+                            android:textColor="@color/hint_text"
                             android:textSize="12sp"
                             android:fontFamily="@font/medium"/>
                 </LinearLayout>
             </TableRow>
         </TableLayout>
+
+        <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:padding="0dp"
+                android:visibility="gone"
+                android:id="@+id/schedule_range_date_picker_layout"
+                android:layout_marginTop="16dp"
+                android:calendarTextColor="@color/text"
+                android:theme="@style/DatePickerTheme"
+                android:background="@drawable/form_edittext"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -166,7 +180,7 @@
             <EditText android:layout_width="0dp" android:layout_height="wrap_content"
                       android:background="@android:color/transparent"
                       android:id="@+id/schedule_form_content_location_edittext"
-                      android:hint="장소"
+                      android:hint="주소"
                       android:layout_marginEnd="8dp"
                       android:textColorHint="@color/hint_text"
                       app:layout_constraintTop_toTopOf="parent"
@@ -226,19 +240,50 @@
                       android:textColor="@color/text"
                       android:textSize="12sp"
                       android:fontFamily="@font/bold"/>
-            <androidx.appcompat.widget.AppCompatButton
+            <Spinner
+                    android:id="@+id/schedule_form_content_repeat_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:background="@android:color/transparent"
-                    android:text="없음"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/bold"
-                    android:textColor="@color/hint_text"/>
+                    android:popupBackground="@drawable/solid_spinner_shape"
+                    android:background="@android:color/transparent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/schedule_form_content_repeat_edit_layout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/form_edittext">
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintLeft_toLeftOf="parent"
+                      android:id="@+id/schedule_form_content_repeat_title"
+                      android:text="반복 횟수"
+                      android:textColor="@color/text"
+                      android:textSize="12sp"
+                      android:fontFamily="@font/bold"/>
+            <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:background="@android:color/transparent"
+                      android:id="@+id/schedule_form_content_repeat_edittext"
+                      android:hint="최대 99회"
+                      android:maxLength="2"
+                      android:inputType="number"
+                      android:textAlignment="viewEnd"
+                      android:layout_marginStart="8dp"
+                      android:textColorHint="@color/hint_text"
+                      app:layout_constraintTop_toTopOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      android:textColor="@color/text"
+                      android:textSize="12sp"
+                      android:fontFamily="@font/bold"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -256,19 +301,15 @@
                       android:textColor="@color/text"
                       android:textSize="12sp"
                       android:fontFamily="@font/bold"/>
-            <androidx.appcompat.widget.AppCompatButton
+            <Spinner
+                    android:id="@+id/schedule_form_content_alert_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    android:background="@android:color/transparent"
-                    android:text="없음"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/bold"
-                    android:textColor="@color/hint_text"/>
+                    android:popupBackground="@drawable/solid_spinner_shape"
+                    android:background="@android:color/transparent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

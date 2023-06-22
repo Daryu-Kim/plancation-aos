@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="repeat_array">
+        <item>매일</item>
+        <item>매주</item>
+        <item>매월</item>
+        <item>매년</item>
+        <item>없음</item>
+    </string-array>
+    <string-array name="alert_array">
+        <item>당일</item>
+        <item>하루 전</item>
+        <item>1주 전</item>
+        <item>없음</item>
+    </string-array>
+</resources>
