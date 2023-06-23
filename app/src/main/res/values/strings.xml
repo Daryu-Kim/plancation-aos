@@ -2,4 +2,6 @@
     <string name="app_name">plancation</string>
     <string name="terms">위의 선택지 중 한개를 누름으로서, 플랜케이션의 서비스 이용약관과 개인정보처리방침에 동의한 것으로 간주합니다.</string>
     <string name="agree_terms">가입하기 버튼을 누르면, 플랜케이션의 서비스 이용약관과 개인정보처리방침을 읽고 동의했음으로 간주합니다.</string>
+    <string name="google_map_api_key">AIzaSyDbUGBM3TEQKIR_Nah01_d8cxUq9eFdS3I</string>
+    <string name="address_not_found">유효한 주소를 입력해주세요!</string>
 </resources>

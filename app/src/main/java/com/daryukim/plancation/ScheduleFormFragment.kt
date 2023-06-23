@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -26,6 +27,7 @@ import java.util.Calendar
 
 class ScheduleFormFragment : BottomSheetDialogFragment() {
   private val googleGeocodingApi: GoogleGeocodingApi
+  private val googleReverseGeocodingApi: GoogleReverseGeocodingApi
 
   private var _binding: FragmentScheduleFormBinding? = null
   private val binding get() = _binding!!
@@ -46,6 +48,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
       .build()
 
     googleGeocodingApi = retrofit.create(GoogleGeocodingApi::class.java)
+    googleReverseGeocodingApi = retrofit.create(GoogleReverseGeocodingApi::class.java)
   }
 
   // 프래그먼트 생성 시 뷰 설정
@@ -54,10 +57,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     val alertItems = resources.getStringArray(R.array.alert_array)
     val repeatAdapter = CustomSpinnerAdapter(requireContext(), repeatItems)
     val alertAdapter = CustomSpinnerAdapter(requireContext(), alertItems)
-    arguments?.let {
-      isModify = it.getBoolean("isModify")
-      data = it.getParcelable("data")!!
-    }
+
     val calendar = Calendar.getInstance()
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
@@ -67,21 +67,8 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     _binding = FragmentScheduleFormBinding.inflate(inflater, container, false)
     val view = binding.root
 
-    if (isModify) {
-      binding.scheduleFormBarTitle.text = "이벤트 수정"
-      binding.scheduleFormBarSubmitButton.text = "완료"
-      binding.scheduleFormContentRepeatSpinner.isEnabled = false
-      binding.scheduleFormContentAlertSpinner.isEnabled = false
-
-      binding.scheduleFormContentTitle.text = SpannableStringBuilder(data.eventTitle)
-      onClickedDayButton()
-      binding.scheduleDayButton.isEnabled = false
-      binding.scheduleRangeButton.isEnabled = false
-    } else {
-      binding.scheduleFormBarTitle.text = "새로운 이벤트"
-      binding.scheduleFormBarSubmitButton.text = "등록"
-      onClickedDayButton()
-    }
+    setupArguments()
+    setupForm()
 
     binding.scheduleRangeDatePickerLayout.init(year, month, dayOfMonth,
       DatePicker.OnDateChangedListener { _, y, m, d ->
@@ -130,38 +117,89 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
       }
     }
 
-    binding.scheduleFormBarCancelButton.setOnClickListener { dismiss() }
-
-    binding.scheduleFormBarSubmitButton.setOnClickListener {
-      if (isModify) {
-        // 이벤트 수정
-      } else {
-        // 새로운 이벤트
-      }
-      dismiss()
-    }
-
-    binding.scheduleDayButton.setOnClickListener { onClickedDayButton() }
-    binding.scheduleRangeButton.setOnClickListener { onClickedRangeButton() }
-    binding.scheduleRangeStartButton.setOnClickListener {
-      if (!isAllDay) {
-        isRangeStartClicked = !isRangeStartClicked
-        isRangeEndClicked = false
-        onClickedRangeDateButton()
-      }
-    }
-    binding.scheduleRangeEndButton.setOnClickListener {
-      if (!isAllDay) {
-        isRangeStartClicked = false
-        isRangeEndClicked = !isRangeEndClicked
-        onClickedRangeDateButton()
-      }
-    }
-    binding.scheduleFormContentLocationButton.setOnClickListener { fetchCoordinatesFromAddress(binding.scheduleFormContentLocationEdittext.text.toString()) }
-    binding.scheduleFormContentColorButton.setOnClickListener { onShowColorPicker() }
+    setupClickListeners()
 
     return view
   }
+
+  private fun setupArguments() {
+    arguments?.let {
+      isModify = it.getBoolean("isModify")
+      data = it.getParcelable("data")!!
+    }
+  }
+
+  private fun setupForm() {
+    if (isModify) {
+      binding.scheduleFormBarTitle.text = "이벤트 수정"
+      binding.scheduleFormBarSubmitButton.text = "완료"
+      binding.scheduleFormContentRepeatSpinner.isEnabled = false
+      binding.scheduleFormContentAlertSpinner.isEnabled = false
+
+      binding.scheduleFormContentTitle.text = SpannableStringBuilder(data.eventTitle)
+      onDayButtonClick()
+      fetchAddressFromCoordinates(data.eventLocation.geoPoint.latitude, data.eventLocation.geoPoint.longitude)
+      binding.scheduleFormContentColorButton.backgroundTintList = ColorStateList.valueOf(
+        Color.argb(
+          data.eventBackgroundColor["alphaColor"]!!,
+          data.eventBackgroundColor["redColor"]!!,
+          data.eventBackgroundColor["greenColor"]!!,
+          data.eventBackgroundColor["blueColor"]!!
+        )
+      )
+      binding.scheduleDayButton.isEnabled = false
+      binding.scheduleRangeButton.isEnabled = false
+    } else {
+      binding.scheduleFormBarTitle.text = "새로운 이벤트"
+      binding.scheduleFormBarSubmitButton.text = "등록"
+      onDayButtonClick()
+    }
+  }
+
+  private fun setupClickListeners() {
+    binding.scheduleFormBarCancelButton.setOnClickListener { onCancelButtonClick() }
+    binding.scheduleFormBarSubmitButton.setOnClickListener { onSubmitButtonClick() }
+    binding.scheduleDayButton.setOnClickListener { onDayButtonClick() }
+    binding.scheduleRangeButton.setOnClickListener { onRangeButtonClick() }
+    binding.scheduleRangeStartButton.setOnClickListener { onRangeStartButtonClick() }
+    binding.scheduleRangeEndButton.setOnClickListener { onRangeEndButtonClick() }
+    binding.scheduleFormContentLocationButton.setOnClickListener { onLocationButtonClick() }
+    binding.scheduleFormContentColorButton.setOnClickListener { onShowColorPicker() }
+  }
+
+  private fun onCancelButtonClick() {
+    dismiss()
+  }
+
+  private fun onSubmitButtonClick() {
+    if (isModify) {
+      // 이벤트 수정
+    } else {
+      // 새로운 이벤트
+    }
+    dismiss()
+  }
+
+  private fun onRangeStartButtonClick() {
+    if (!isAllDay) {
+      isRangeStartClicked = !isRangeStartClicked
+      isRangeEndClicked = false
+      onClickedRangeDateButton()
+    }
+  }
+
+  private fun onRangeEndButtonClick() {
+    if (!isAllDay) {
+      isRangeStartClicked = false
+      isRangeEndClicked = !isRangeEndClicked
+      onClickedRangeDateButton()
+    }
+  }
+
+  private fun onLocationButtonClick() {
+    fetchCoordinatesFromAddress(binding.scheduleFormContentLocationEdittext.text.toString())
+  }
+
 
   private fun changeDateTextView() {
     val formatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 EEEE")
@@ -169,34 +207,38 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     binding.scheduleRangeEndDate.text = selectedEndDate.format(formatter)
   }
 
-  private fun onClickedDayButton() {
+  private fun onDayButtonClick() {
     isAllDay = true
-    binding.scheduleDayButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.form_left_button_shape)
-    binding.scheduleDayButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-    binding.scheduleRangeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
-    binding.scheduleRangeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
-    binding.scheduleRangeStartTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.hint_text))
-    binding.scheduleRangeStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.hint_text))
-    binding.scheduleRangeEndTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.hint_text))
-    binding.scheduleRangeEndDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.hint_text))
-
+    updateButtonColors(
+      selectedDayButton = binding.scheduleDayButton,
+      unselectedDayButton = binding.scheduleRangeButton,
+      hintColorResources = arrayOf(R.color.hint_text, R.color.hint_text, R.color.hint_text, R.color.hint_text),
+    )
     binding.scheduleRangeDatePickerLayout.visibility = View.GONE
-
     selectedEndDate = selectedStartDate
     changeDateTextView()
   }
 
-  private fun onClickedRangeButton() {
+  private fun onRangeButtonClick() {
     isAllDay = false
-    binding.scheduleRangeButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.form_right_button_shape)
-    binding.scheduleDayButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
-    binding.scheduleDayButton.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
-    binding.scheduleRangeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-    binding.scheduleRangeStartTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
-    binding.scheduleRangeStartDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
-    binding.scheduleRangeEndTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
-    binding.scheduleRangeEndDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
+    updateButtonColors(
+      selectedDayButton = binding.scheduleRangeButton,
+      unselectedDayButton = binding.scheduleDayButton,
+      hintColorResources = arrayOf(R.color.text, R.color.text, R.color.text, R.color.text),
+    )
     binding.scheduleRangeDatePickerLayout.visibility = View.GONE
+  }
+
+  private fun updateButtonColors(selectedDayButton: Button, unselectedDayButton: Button, hintColorResources: Array<Int>) {
+    selectedDayButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.form_left_button_shape)
+    selectedDayButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+    unselectedDayButton.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
+    unselectedDayButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
+
+    binding.scheduleRangeStartTitle.setTextColor(ContextCompat.getColor(requireContext(), hintColorResources[0]))
+    binding.scheduleRangeStartDate.setTextColor(ContextCompat.getColor(requireContext(), hintColorResources[1]))
+    binding.scheduleRangeEndTitle.setTextColor(ContextCompat.getColor(requireContext(), hintColorResources[2]))
+    binding.scheduleRangeEndDate.setTextColor(ContextCompat.getColor(requireContext(), hintColorResources[3]))
   }
 
   private fun onClickedRangeDateButton() {
@@ -218,31 +260,53 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     } else if (isRangeEndClicked) {
       binding.scheduleRangeEndTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.accent))
       binding.scheduleRangeEndDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.accent))
-    } else {
-
     }
   }
 
-  private fun fetchCoordinatesFromAddress(address: String) {
-    val apiKey = "AIzaSyDbUGBM3TEQKIR_Nah01_d8cxUq9eFdS3I"
+  private fun fetchAddressFromCoordinates(latitude: Double, longitude: Double) {
+    val apiKey = getString(R.string.google_map_api_key)
     val language = "ko"
-    Log.d("Geocoding", address)
 
-    googleGeocodingApi.getLatLngFromAddress(address, apiKey, language).enqueue(object : Callback<GeocodingResponse> {
-      override fun onResponse(call: Call<GeocodingResponse>, response: Response<GeocodingResponse>) {
+    googleReverseGeocodingApi.getGeocode("$latitude,$longitude", apiKey, language).enqueue(object: Callback<ReverseGeocodingResponse> {
+      override fun onResponse(call: Call<ReverseGeocodingResponse>, response: Response<ReverseGeocodingResponse>) {
         if (response.isSuccessful) {
           val geocodingResponse = response.body()
           val result = geocodingResponse?.results?.firstOrNull()
 
           if (result != null) {
-            val latLng = result.geometry.location
-            Log.d("Geocoding", "Latitude: ${latLng.lat}, Longitude: ${latLng.lng}")
-            binding.scheduleFormContentLocationEdittext.text = Editable.Factory.getInstance().newEditable(result.formatted_address)
+            val address = result.formatted_address
+            binding.scheduleFormContentLocationEdittext.text = Editable.Factory.getInstance().newEditable(address)
+            Log.d("Geocoding", "Full Address: $address")
           } else {
-            Toast.makeText(requireContext(), "주소를 찾을 수 없습니다!", Toast.LENGTH_SHORT).show()
+            Log.d("Geocoding", "No address found for the coordinates.")
+          }
+        }
+      }
+
+      override fun onFailure(call: Call<ReverseGeocodingResponse>, t: Throwable) {
+        Log.d("Geocoding", "Failed to get geocoding result: $t")
+      }
+    })
+  }
+
+
+  private fun fetchCoordinatesFromAddress(address: String) {
+    val apiKey = getString(R.string.google_map_api_key)
+    val language = "ko"
+
+    googleGeocodingApi.getLatLngFromAddress(address, apiKey, language).enqueue(object : Callback<GeocodingResponse> {
+      override fun onResponse(call: Call<GeocodingResponse>, response: Response<GeocodingResponse>) {
+        response.body()?.let { geocodingResponse ->
+          geocodingResponse.results.firstOrNull()?.run {
+            val latLng = geometry.location
+            Log.d("Geocoding", "Latitude: ${latLng.lat}, Longitude: ${latLng.lng}")
+
+            binding.scheduleFormContentLocationEdittext.text = Editable.Factory.getInstance().newEditable(formatted_address)
+          } ?: run {
+            Toast.makeText(requireContext(), getString(R.string.address_not_found), Toast.LENGTH_SHORT).show()
             Log.d("Geocoding", "No coordinates found for the address.")
           }
-        } else {
+        } ?: run {
           Log.d("Geocoding", "Error occurred: ${response.errorBody()?.string()}")
         }
       }
@@ -253,6 +317,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     })
   }
 
+
   private fun onShowColorPicker() {
     val dataColor = data.eventBackgroundColor.toMutableMap()
     val colorPickerBottomSheet = ColorPickerBottomSheet()
@@ -262,8 +327,6 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
         dataColor["greenColor"] = Color.green(selectedColor)
         dataColor["blueColor"] = Color.blue(selectedColor)
         data = data.copy(eventBackgroundColor = dataColor)
-        Log.d("Color", dataColor.toString())
-        Log.d("Color", data.eventBackgroundColor.toString())
         binding.scheduleFormContentColorButton.backgroundTintList = ColorStateList.valueOf(
           Color.argb(
             dataColor["alphaColor"]!!,
