@@ -16,30 +16,49 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.daryukim.plancation.databinding.FragmentScheduleFormBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.ktx.Firebase
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
+import java.time.temporal.ChronoUnit.DAYS
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.math.max
 
 class ScheduleFormFragment : BottomSheetDialogFragment() {
-  private val googleGeocodingApi: GoogleGeocodingApi
-  private val googleReverseGeocodingApi: GoogleReverseGeocodingApi
-
   private var _binding: FragmentScheduleFormBinding? = null
   private val binding get() = _binding!!
 
+  private val googleGeocodingApi: GoogleGeocodingApi
+  private val googleReverseGeocodingApi: GoogleReverseGeocodingApi
+
+  private val db: FirebaseFirestore
+  private val auth: FirebaseAuth
+
+  private var data: ScheduleModel = ScheduleModel()
+
   private var isModify: Boolean = false
   private var isAllDay: Boolean = true
-  private var data: ScheduleModel = ScheduleModel()
+
   private var isRangeStartClicked = false
   private var isRangeEndClicked = false
 
   private var selectedStartDate: LocalDate = CalendarUtil.selectedDate.value!!
   private var selectedEndDate: LocalDate = CalendarUtil.selectedDate.value!!
+
+  private var dataColor: Map<String, Int>
+  private var dataLocation: Map<String, Double>
 
   init {
     val retrofit = Retrofit.Builder()
@@ -49,77 +68,35 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
 
     googleGeocodingApi = retrofit.create(GoogleGeocodingApi::class.java)
     googleReverseGeocodingApi = retrofit.create(GoogleReverseGeocodingApi::class.java)
+    db = FirebaseFirestore.getInstance()
+    auth = Firebase.auth
+    dataColor = data.eventBackgroundColor.toMutableMap()
+    dataLocation = mapOf(
+      "latitude" to 0.0,
+      "longitude" to 0.0
+    )
   }
 
   // 프래그먼트 생성 시 뷰 설정
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-    val repeatItems = resources.getStringArray(R.array.repeat_array)
-    val alertItems = resources.getStringArray(R.array.alert_array)
-    val repeatAdapter = CustomSpinnerAdapter(requireContext(), repeatItems)
-    val alertAdapter = CustomSpinnerAdapter(requireContext(), alertItems)
-
-    val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-
-    // 바인딩 객체를 생성하고 화면 레이아웃을 동적으로 연결합니다.
-    _binding = FragmentScheduleFormBinding.inflate(inflater, container, false)
-    val view = binding.root
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View {
+    val view = inflateBinding(inflater, container)
 
     setupArguments()
     setupForm()
-
-    binding.scheduleRangeDatePickerLayout.init(year, month, dayOfMonth,
-      DatePicker.OnDateChangedListener { _, y, m, d ->
-        if (isRangeStartClicked) {
-          selectedStartDate = LocalDate.of(y,m + 1,d)
-          if (selectedStartDate > selectedEndDate) {
-            selectedEndDate = selectedStartDate
-          }
-          changeDateTextView()
-        } else if (isRangeEndClicked) {
-          selectedEndDate = LocalDate.of(y,m + 1,d)
-          if (selectedStartDate > selectedEndDate) {
-            selectedStartDate = selectedEndDate
-          }
-          changeDateTextView()
-        }
-      })
-    changeDateTextView()
-
-
-    binding.scheduleFormContentRepeatEditLayout.visibility = View.GONE
-    binding.scheduleFormContentRepeatSpinner.adapter = repeatAdapter
-    binding.scheduleFormContentRepeatSpinner.setSelection(repeatAdapter.count - 1)
-    binding.scheduleFormContentRepeatSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        repeatAdapter.selectedPosition = position
-        repeatAdapter.notifyDataSetChanged()
-        binding.scheduleFormContentRepeatEditLayout.visibility = if (position != 4) View.VISIBLE else View.GONE
-      }
-
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-
-      }
-    }
-
-    binding.scheduleFormContentAlertSpinner.adapter = alertAdapter
-    binding.scheduleFormContentAlertSpinner.setSelection(alertAdapter.count - 1)
-    binding.scheduleFormContentAlertSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        alertAdapter.selectedPosition = position
-        alertAdapter.notifyDataSetChanged()
-      }
-
-      override fun onNothingSelected(parent: AdapterView<*>?) {
-
-      }
-    }
-
+    setupDates()
+    setupSpinners()
     setupClickListeners()
 
     return view
+  }
+
+  private fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): View {
+    _binding = FragmentScheduleFormBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   private fun setupArguments() {
@@ -133,6 +110,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     if (isModify) {
       binding.scheduleFormBarTitle.text = "이벤트 수정"
       binding.scheduleFormBarSubmitButton.text = "완료"
+      binding.scheduleFormContentTitle.isEnabled = false
       binding.scheduleFormContentRepeatSpinner.isEnabled = false
       binding.scheduleFormContentAlertSpinner.isEnabled = false
 
@@ -156,6 +134,64 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     }
   }
 
+  private fun setupDates() {
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+    binding.scheduleRangeDatePickerLayout.init(year, month, dayOfMonth,
+      DatePicker.OnDateChangedListener { _, y, m, d ->
+        if (isRangeStartClicked) {
+          selectedStartDate = LocalDate.of(y, m + 1, d)
+          if (selectedStartDate > selectedEndDate) {
+            selectedEndDate = selectedStartDate
+          }
+          changeDateTextView()
+        } else if (isRangeEndClicked) {
+          selectedEndDate = LocalDate.of(y, m + 1, d)
+          if (selectedStartDate > selectedEndDate) {
+            selectedStartDate = selectedEndDate
+          }
+          changeDateTextView()
+        }
+      })
+    changeDateTextView()
+  }
+
+  private fun setupSpinners() {
+    val repeatItems = resources.getStringArray(R.array.repeat_array)
+    val alertItems = resources.getStringArray(R.array.alert_array)
+    val repeatAdapter = CustomSpinnerAdapter(requireContext(), repeatItems)
+    val alertAdapter = CustomSpinnerAdapter(requireContext(), alertItems)
+
+    binding.scheduleFormContentRepeatEditLayout.visibility = View.GONE
+    binding.scheduleFormContentRepeatSpinner.adapter = repeatAdapter
+    binding.scheduleFormContentRepeatSpinner.setSelection(repeatAdapter.count - 1)
+    binding.scheduleFormContentRepeatSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        repeatAdapter.selectedPosition = position
+        repeatAdapter.notifyDataSetChanged()
+        binding.scheduleFormContentRepeatEditLayout.visibility = if (position != 4) View.VISIBLE else View.GONE
+      }
+
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+    }
+
+    binding.scheduleFormContentAlertSpinner.adapter = alertAdapter
+    binding.scheduleFormContentAlertSpinner.setSelection(alertAdapter.count - 1)
+    binding.scheduleFormContentAlertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+      override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        alertAdapter.selectedPosition = position
+        alertAdapter.notifyDataSetChanged()
+      }
+
+      override fun onNothingSelected(parent: AdapterView<*>?) {
+      }
+    }
+  }
+
   private fun setupClickListeners() {
     binding.scheduleFormBarCancelButton.setOnClickListener { onCancelButtonClick() }
     binding.scheduleFormBarSubmitButton.setOnClickListener { onSubmitButtonClick() }
@@ -173,11 +209,85 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
 
   private fun onSubmitButtonClick() {
     if (isModify) {
-      // 이벤트 수정
+      updateScheduleToFirestore()
     } else {
-      // 새로운 이벤트
+      try {
+        addScheduleToFirestore()
+        Toast.makeText(requireContext(), "일정을 성공적으로 생성했습니다!", Toast.LENGTH_SHORT).show()
+        dismiss()
+      } catch (e: FirebaseFirestoreException) {
+        Toast.makeText(requireContext(), "일정을 생성하지 못했습니다!", Toast.LENGTH_SHORT).show()
+      }
     }
-    dismiss()
+  }
+
+  private fun updateScheduleToFirestore() {
+    db.collection("Calendars")
+      .document("A9PHFsmDLUWbaYDdy2XX")
+      .collection("Events")
+      .document(data.eventID)
+      .update(modifyEventData())
+  }
+
+  private fun addScheduleToFirestore() {
+    val eventLinkID = UUID.randomUUID().toString()
+    val dateCount = DAYS.between(selectedStartDate.atStartOfDay(), selectedEndDate.atStartOfDay()).toInt()
+
+    for (i in 0..dateCount) {
+      val eventID = UUID.randomUUID().toString()
+      val eventData = createEventData(eventID, i, eventLinkID, dateCount > 0)
+
+      db.collection("Calendars")
+        .document("A9PHFsmDLUWbaYDdy2XX")
+        .collection("Events")
+        .document(eventID)
+        .set(eventData)
+    }
+  }
+
+  private fun modifyEventData(): HashMap<String, Any?> {
+    val selectedItemPosition = binding.scheduleFormContentAlertSpinner.selectedItemPosition
+    return hashMapOf(
+      "eventAlerts" to mapOf(
+        "isToday" to (selectedItemPosition == 0),
+        "isDayAgo" to (selectedItemPosition == 1),
+        "isWeekAgo" to (selectedItemPosition == 2),
+        "isNone" to (selectedItemPosition == 3),
+      ),
+      "eventBackgroundColor" to dataColor,
+      "eventLocation" to GeoPoint(
+        dataLocation["latitude"]!!,
+        dataLocation["longitude"]!!
+      ),
+    )
+  }
+
+  private fun createEventData(eventID: String, day: Int, eventLinkID: String, isRange: Boolean): HashMap<String, Any?> {
+    val eventTitle = if (!isRange) binding.scheduleFormContentTitle.text.toString() else "${binding.scheduleFormContentTitle.text} ${day + 1}일차"
+    val eventTime = Timestamp(Date.from(selectedStartDate.atStartOfDay().plusDays(day.toLong()).atZone(ZoneId.systemDefault()).toInstant()))
+    val selectedItemPosition = binding.scheduleFormContentAlertSpinner.selectedItemPosition
+
+    return hashMapOf(
+      "eventID" to eventID,
+      "eventTitle" to eventTitle,
+      "eventTime" to eventTime,
+      "eventUsers" to arrayListOf(auth.currentUser?.uid.toString()),
+      "eventAlerts" to mapOf(
+        "isToday" to (selectedItemPosition == 0),
+        "isDayAgo" to (selectedItemPosition == 1),
+        "isWeekAgo" to (selectedItemPosition == 2),
+        "isNone" to (selectedItemPosition == 3),
+      ),
+      "eventAuthorID" to auth.currentUser?.uid,
+      "eventIsTodo" to false,
+      "eventCheckUsers" to arrayListOf<String>(),
+      "eventBackgroundColor" to dataColor,
+      "eventLocation" to GeoPoint(
+        dataLocation["latitude"]!!,
+        dataLocation["longitude"]!!
+      ),
+      "eventLinkID" to eventLinkID
+    )
   }
 
   private fun onRangeStartButtonClick() {
@@ -230,7 +340,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
   }
 
   private fun updateButtonColors(selectedDayButton: Button, unselectedDayButton: Button, hintColorResources: Array<Int>) {
-    selectedDayButton.background = ContextCompat.getDrawable(requireContext(), R.drawable.form_left_button_shape)
+    selectedDayButton.background = ContextCompat.getDrawable(requireContext(), if (selectedDayButton == binding.scheduleDayButton) R.drawable.form_left_button_shape else R.drawable.form_right_button_shape)
     selectedDayButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     unselectedDayButton.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent))
     unselectedDayButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.text))
@@ -299,9 +409,12 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
         response.body()?.let { geocodingResponse ->
           geocodingResponse.results.firstOrNull()?.run {
             val latLng = geometry.location
-            Log.d("Geocoding", "Latitude: ${latLng.lat}, Longitude: ${latLng.lng}")
 
             binding.scheduleFormContentLocationEdittext.text = Editable.Factory.getInstance().newEditable(formatted_address)
+            dataLocation = mapOf(
+              "latitude" to latLng.lat,
+              "longitude" to latLng.lng
+            )
           } ?: run {
             Toast.makeText(requireContext(), getString(R.string.address_not_found), Toast.LENGTH_SHORT).show()
             Log.d("Geocoding", "No coordinates found for the address.")
@@ -319,13 +432,14 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
 
 
   private fun onShowColorPicker() {
-    val dataColor = data.eventBackgroundColor.toMutableMap()
     val colorPickerBottomSheet = ColorPickerBottomSheet()
     colorPickerBottomSheet.setOnColorSelectedListener { selectedColor ->
-        dataColor["alphaColor"] = Color.alpha(selectedColor)
-        dataColor["redColor"] = Color.red(selectedColor)
-        dataColor["greenColor"] = Color.green(selectedColor)
-        dataColor["blueColor"] = Color.blue(selectedColor)
+        dataColor = mapOf(
+          "alphaColor" to Color.alpha(selectedColor),
+          "redColor" to Color.red(selectedColor),
+          "greenColor" to Color.green(selectedColor),
+          "blueColor" to Color.blue(selectedColor)
+        )
         data = data.copy(eventBackgroundColor = dataColor)
         binding.scheduleFormContentColorButton.backgroundTintList = ColorStateList.valueOf(
           Color.argb(

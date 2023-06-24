@@ -2,12 +2,12 @@
 <LinearLayout
         android:id="@+id/schedule_form"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
-
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:background="@drawable/form_shape"
@@ -53,24 +53,21 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
+            android:orientation="vertical"
             android:paddingHorizontal="32dp"
-            android:paddingVertical="16dp"
-            android:orientation="vertical">
-        <EditText android:layout_width="match_parent" android:layout_height="42dp"
-                  android:id="@+id/schedule_form_content_title"
-                  android:background="@drawable/form_edittext"
-                  android:hint="일정 제목"
-                  android:textColorHint="@color/hint_text"
-                  android:textColor="@color/text"
-                  android:fontFamily="@font/bold"
-                  android:textSize="12sp"
-                  android:paddingHorizontal="16dp"/>
-
+            android:paddingVertical="16dp">
+        <EditText
+                android:id="@+id/schedule_form_content_title"
+                style="@style/FormEditText"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@drawable/form_edittext"
+                android:hint="일정 제목"
+                android:paddingHorizontal="16dp" />
         <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +126,6 @@
                             android:textColor="@color/hint_text"
                             android:textSize="12sp"/>
                 </LinearLayout>
-
                 <ImageView
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
@@ -159,7 +155,6 @@
                 </LinearLayout>
             </TableRow>
         </TableLayout>
-
         <DatePicker
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
@@ -170,26 +165,23 @@
                 android:calendarTextColor="@color/text"
                 android:theme="@style/DatePickerTheme"
                 android:background="@drawable/form_edittext"/>
-
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="16dp"
                 android:paddingHorizontal="16dp"
                 android:background="@drawable/form_edittext">
-            <EditText android:layout_width="0dp" android:layout_height="wrap_content"
-                      android:background="@android:color/transparent"
-                      android:id="@+id/schedule_form_content_location_edittext"
-                      android:hint="주소"
-                      android:layout_marginEnd="8dp"
-                      android:textColorHint="@color/hint_text"
-                      app:layout_constraintTop_toTopOf="parent"
-                      app:layout_constraintBottom_toBottomOf="parent"
-                      app:layout_constraintLeft_toLeftOf="parent"
-                      app:layout_constraintRight_toLeftOf="@id/schedule_form_content_location_button"
-                      android:textColor="@color/text"
-                      android:textSize="12sp"
-                      android:fontFamily="@font/bold"/>
+            <EditText
+                    android:id="@+id/schedule_form_content_location_edittext"
+                    style="@style/FormEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="주소"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/schedule_form_content_location_button"
+                    app:layout_constraintTop_toTopOf="parent" />
             <ImageButton
                     android:id="@+id/schedule_form_content_location_button"
                     android:layout_width="wrap_content"
@@ -199,7 +191,6 @@
                     app:layout_constraintRight_toRightOf="parent"
                     android:background="@drawable/ic_search"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -224,7 +215,6 @@
                        android:background="@drawable/ic_color"
                        android:backgroundTint="@color/primary"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -250,7 +240,6 @@
                     android:popupBackground="@drawable/solid_spinner_shape"
                     android:background="@android:color/transparent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/schedule_form_content_repeat_edit_layout"
                 android:visibility="gone"
@@ -269,23 +258,20 @@
                       android:textColor="@color/text"
                       android:textSize="12sp"
                       android:fontFamily="@font/bold"/>
-            <EditText android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:background="@android:color/transparent"
-                      android:id="@+id/schedule_form_content_repeat_edittext"
-                      android:hint="최대 99회"
-                      android:maxLength="2"
-                      android:inputType="number"
-                      android:textAlignment="viewEnd"
-                      android:layout_marginStart="8dp"
-                      android:textColorHint="@color/hint_text"
-                      app:layout_constraintTop_toTopOf="parent"
-                      app:layout_constraintEnd_toEndOf="parent"
-                      app:layout_constraintBottom_toBottomOf="parent"
-                      android:textColor="@color/text"
-                      android:textSize="12sp"
-                      android:fontFamily="@font/bold"/>
+            <EditText
+                    android:id="@+id/schedule_form_content_repeat_edittext"
+                    style="@style/FormEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="최대 99회"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:layout_marginStart="8dp"
+                    android:textAlignment="viewEnd"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -311,8 +297,5 @@
                     android:popupBackground="@drawable/solid_spinner_shape"
                     android:background="@android:color/transparent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </LinearLayout>
-
-
 </LinearLayout>

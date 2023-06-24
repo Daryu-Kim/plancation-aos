@@ -3,7 +3,6 @@ package com.daryukim.plancation
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.GeoPoint
 
 data class ScheduleModel(
@@ -15,8 +14,14 @@ data class ScheduleModel(
   val eventAuthorID: String = "",
   val eventIsTodo: Boolean = false,
   val eventCheckUsers: ArrayList<String> = ArrayList(),
-  val eventBackgroundColor: Map<String, Int> = mapOf(),
-  val eventLocation: ParcelableGeoPoint = ParcelableGeoPoint(GeoPoint(0.0, 0.0))
+  val eventBackgroundColor: Map<String, Int> = mapOf(
+    "alphaColor" to 255,
+    "redColor" to 115,
+    "greenColor" to 91,
+    "blueColor" to 242
+  ),
+  val eventLocation: ParcelableGeoPoint = ParcelableGeoPoint(GeoPoint(0.0, 0.0)),
+  val eventLinkID: String = ""
 ): Parcelable {
   constructor(parcel: Parcel) : this(
     parcel.readString() ?: "",
@@ -28,7 +33,8 @@ data class ScheduleModel(
     parcel.readByte() != 0.toByte(),
     parcel.createStringArrayList() ?: arrayListOf(),
     parcel.readHashMap(null) as Map<String, Int>,
-    parcel.readParcelable(ParcelableGeoPoint::class.java.classLoader)!!
+    parcel.readParcelable(ParcelableGeoPoint::class.java.classLoader)!!,
+    parcel.readString() ?: ""
   )
 
   override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -42,6 +48,7 @@ data class ScheduleModel(
     parcel.writeStringList(eventCheckUsers)
     parcel.writeMap(eventBackgroundColor)
     parcel.writeParcelable(eventLocation, flags)
+    parcel.writeString(eventLinkID)
   }
 
   override fun describeContents(): Int {
@@ -57,18 +64,19 @@ data class ScheduleModel(
       return arrayOfNulls(size)
     }
 
-    fun fromDocument(document: DocumentSnapshot): ScheduleModel {
+    fun fromDocument(document: MutableMap<String, Any>): ScheduleModel {
       return ScheduleModel(
-        eventID = document.getString("eventID") ?: "",
-        eventTitle = document.getString("eventTitle") ?: "",
-        eventTime = document.getTimestamp("eventTime")!!,
-        eventUsers = document.get("eventUsers") as ArrayList<String>,
-        eventAlerts = document.get("eventAlerts") as Map<String, Any>,
-        eventAuthorID = document.getString("eventAuthorID") ?: "",
-        eventIsTodo = document.getBoolean("eventIsTodo") ?: false,
-        eventCheckUsers = document.get("eventCheckUsers") as ArrayList<String>,
-        eventBackgroundColor = document.get("eventBackgroundColor") as Map<String, Int>,
-        eventLocation = ParcelableGeoPoint(document.getGeoPoint("eventLocation")!!)
+        eventID = document["eventID"] as String,
+        eventTitle = document["eventTitle"] as String,
+        eventTime = document["eventTime"] as Timestamp,
+        eventUsers = document["eventUsers"] as ArrayList<String>,
+        eventAlerts = document["eventAlerts"] as Map<String, Any>,
+        eventAuthorID = document["eventAuthorID"] as String,
+        eventIsTodo = document["eventIsTodo"] as Boolean,
+        eventCheckUsers = document["eventCheckUsers"] as ArrayList<String>,
+        eventBackgroundColor = document["eventBackgroundColor"] as Map<String, Int>,
+        eventLocation = ParcelableGeoPoint(document["eventLocation"] as GeoPoint),
+        eventLinkID = document["eventLinkID"] as String
       )
     }
   }

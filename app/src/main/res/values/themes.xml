@@ -42,4 +42,15 @@
         <item name="android:datePickerMode">spinner</item>
     </style>
 
+    <style name="FormTextView">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/bold</item>
+    </style>
+
+    <style name="FormEditText" parent="FormTextView">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColorHint">@color/hint_text</item>
+    </style>
+
 </resources>

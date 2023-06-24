@@ -1,28 +1,17 @@
 package com.daryukim.plancation
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.daryukim.plancation.databinding.FragmentCalendarBinding
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -30,8 +19,6 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class CalendarFragment: Fragment() {
   private var _binding: FragmentCalendarBinding? = null
@@ -155,6 +142,7 @@ class CalendarFragment: Fragment() {
     val endLocalDate: LocalDate = date.plusDays(1)
     val endDateTime: LocalDateTime = endLocalDate.atStartOfDay()
     val endDate: Date = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant())
+    val dataList = mutableListOf<ScheduleModel>()
 
     db.collection("Calendars")
       .document("A9PHFsmDLUWbaYDdy2XX")
@@ -162,23 +150,29 @@ class CalendarFragment: Fragment() {
       .whereEqualTo("eventIsTodo", false)
       .whereGreaterThanOrEqualTo("eventTime", Timestamp(startDate))
       .whereLessThan("eventTime", Timestamp(endDate))
-      .get()
-      .addOnCompleteListener(OnCompleteListener { task ->
-        if (task.isSuccessful) {
-          val events = task.result
-          if (events != null) {
-            val scheduleModelList = events.documents.map {documentSnapshot ->
-              ScheduleModel.fromDocument(documentSnapshot)
-            }
-            onComplete(scheduleModelList)
-          } else {
-            onComplete(emptyList())
-          }
-        } else {
-          print(("Error"))
-          onComplete(emptyList())
+      .addSnapshotListener { snapshots, e ->
+        if (e != null) {
+          Toast.makeText(requireContext(), "일정을 불러오지 못했습니다!", Toast.LENGTH_SHORT).show()
+          return@addSnapshotListener
         }
-      })
+
+        for (dc in snapshots!!.documentChanges) {
+          when (dc.type) {
+            DocumentChange.Type.ADDED -> {
+              dataList.add(ScheduleModel.fromDocument(dc.document.data))
+              onComplete(dataList)
+            }
+            DocumentChange.Type.MODIFIED -> {
+              dataList.add(ScheduleModel.fromDocument(dc.document.data))
+              onComplete(dataList)
+            }
+            DocumentChange.Type.REMOVED -> {
+              dataList.remove(ScheduleModel.fromDocument(dc.document.data))
+              onComplete(dataList)
+            }
+          }
+        }
+      }
   }
 
   @SuppressLint("ClickableViewAccessibility")
