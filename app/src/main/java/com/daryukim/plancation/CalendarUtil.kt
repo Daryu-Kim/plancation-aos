@@ -6,7 +6,7 @@ import kotlin.properties.Delegates
 
 data class CalendarUtil(
   val selectedDate: MutableLiveData<LocalDate> = MutableLiveData(),
-  var isDateClicked: Boolean
+  var isDateClicked: Boolean,
 ) {
   companion object {
     val selectedDate: MutableLiveData<LocalDate> = MutableLiveData()

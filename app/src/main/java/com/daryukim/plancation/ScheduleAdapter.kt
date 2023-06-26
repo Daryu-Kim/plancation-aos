@@ -11,6 +11,7 @@ import android.view.View
 import android.view.View.OnCreateContextMenuListener
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
@@ -57,8 +58,43 @@ class ScheduleAdapter(
     val scheduleDDay = DAYS.between(LocalDate.now(), scheduleDate)
     val scheduleGeoPoint = schedule.eventLocation.geoPoint
 
-    holder.itemLayout.setCustomBackgroundTint(schedule.eventBackgroundColor)
+    holder.itemLayout.setCustomBackgroundTint(
+      schedule.eventBackgroundColor,
+      schedule.eventBackgroundColor["redColor"]!! +
+              schedule.eventBackgroundColor["greenColor"]!! +
+              schedule.eventBackgroundColor["blueColor"]!!,
+      true)
+    holder.itemRing.setCustomBackgroundTint(
+      schedule.eventBackgroundColor,
+      schedule.eventBackgroundColor["redColor"]!! +
+              schedule.eventBackgroundColor["greenColor"]!! +
+              schedule.eventBackgroundColor["blueColor"]!!,
+      false)
     holder.itemTitle.text = schedule.eventTitle
+    holder.itemTitle.setTextColor(
+      if ((schedule.eventBackgroundColor["redColor"]!! +
+        schedule.eventBackgroundColor["greenColor"]!! +
+        schedule.eventBackgroundColor["blueColor"]!!) > 420)
+      Color.BLACK
+      else
+      Color.WHITE
+    )
+    holder.itemLocation.setTextColor(
+      if ((schedule.eventBackgroundColor["redColor"]!! +
+        schedule.eventBackgroundColor["greenColor"]!! +
+        schedule.eventBackgroundColor["blueColor"]!!) > 420)
+      Color.DKGRAY
+      else
+      Color.LTGRAY
+    )
+    holder.itemDate.setTextColor(
+      if ((schedule.eventBackgroundColor["redColor"]!! +
+        schedule.eventBackgroundColor["greenColor"]!! +
+        schedule.eventBackgroundColor["blueColor"]!!) > 420)
+      Color.DKGRAY
+      else
+      Color.LTGRAY
+    )
     when {
       scheduleDDay == 0L -> holder.itemDate.text = "D-Day"
       scheduleDDay > 0 -> holder.itemDate.text = "D-$scheduleDDay"
@@ -75,6 +111,7 @@ class ScheduleAdapter(
     val itemTitle: TextView = itemView.findViewById(R.id.schedule_item_title)
     val itemDate: TextView = itemView.findViewById(R.id.schedule_item_date)
     val itemLocation: TextView = itemView.findViewById(R.id.schedule_item_location)
+    val itemRing: ImageView = itemView.findViewById(R.id.schedule_item_ring)
 
     init {
       itemLayout.setOnCreateContextMenuListener(this)
@@ -87,9 +124,25 @@ class ScheduleAdapter(
   }
 
   private fun View.setCustomBackgroundTint(
-    color: Map<String, Int>
+    color: Map<String, Int>,
+    colorSum: Int,
+    isLayout: Boolean
   ) {
-    val tempColor = Color.argb(color["alphaColor"]!!, color["redColor"]!!, color["greenColor"]!!, color["blueColor"]!!)
+    val tempColor: Int
+    if (!isLayout) {
+      tempColor = if (colorSum > 420) {
+        Color.BLACK
+      } else {
+        Color.WHITE
+      }
+    } else {
+      tempColor = Color.argb(
+        color["alphaColor"]!!,
+        color["redColor"]!!,
+        color["greenColor"]!!,
+        color["blueColor"]!!)
+    }
+
     val tempColorStateList = ColorStateList.valueOf(tempColor)
     return ViewCompat.setBackgroundTintList(this, tempColorStateList)
   }

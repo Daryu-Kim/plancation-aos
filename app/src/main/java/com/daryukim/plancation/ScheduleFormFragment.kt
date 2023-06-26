@@ -103,6 +103,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     arguments?.let {
       isModify = it.getBoolean("isModify")
       data = it.getParcelable("data")!!
+      dataColor = data.eventBackgroundColor.toMutableMap()
     }
   }
 
@@ -209,7 +210,13 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
 
   private fun onSubmitButtonClick() {
     if (isModify) {
-      updateScheduleToFirestore()
+      try {
+        updateScheduleToFirestore()
+        Toast.makeText(requireContext(), "일정을 성공적으로 수정했습니다!", Toast.LENGTH_SHORT).show()
+        dismiss()
+      } catch (e: FirebaseFirestoreException) {
+        Toast.makeText(requireContext(), "일정을 수정하지 못했습니다!", Toast.LENGTH_SHORT).show()
+      }
     } else {
       try {
         addScheduleToFirestore()
@@ -225,8 +232,16 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
     db.collection("Calendars")
       .document("A9PHFsmDLUWbaYDdy2XX")
       .collection("Events")
-      .document(data.eventID)
-      .update(modifyEventData())
+      .whereEqualTo("eventLinkID", data.eventLinkID)
+      .get()
+      .addOnSuccessListener { querySnapshot ->
+        querySnapshot.documents.forEach { documentSnapshot ->
+           documentSnapshot.reference.update(modifyEventData())
+        }
+      }
+      .addOnFailureListener { e ->
+        Toast.makeText(requireContext(), "일정을 수정하지 못했습니다!", Toast.LENGTH_SHORT).show()
+      }
   }
 
   private fun addScheduleToFirestore() {
@@ -246,14 +261,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
   }
 
   private fun modifyEventData(): HashMap<String, Any?> {
-    val selectedItemPosition = binding.scheduleFormContentAlertSpinner.selectedItemPosition
     return hashMapOf(
-      "eventAlerts" to mapOf(
-        "isToday" to (selectedItemPosition == 0),
-        "isDayAgo" to (selectedItemPosition == 1),
-        "isWeekAgo" to (selectedItemPosition == 2),
-        "isNone" to (selectedItemPosition == 3),
-      ),
       "eventBackgroundColor" to dataColor,
       "eventLocation" to GeoPoint(
         dataLocation["latitude"]!!,

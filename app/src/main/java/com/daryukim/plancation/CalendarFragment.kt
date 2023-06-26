@@ -2,6 +2,7 @@ package com.daryukim.plancation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -26,6 +27,8 @@ class CalendarFragment: Fragment() {
   private lateinit var db: FirebaseFirestore
   private lateinit var scheduleList: ArrayList<ScheduleModel>
   private lateinit var scheduleAdapter: ScheduleAdapter
+  private var selectedSchedule: Int = 0
+  private var selectedScheduleData: ScheduleModel = ScheduleModel()
 
   // 프래그먼트 생성 시 뷰 설정
   @SuppressLint("ClickableViewAccessibility")
@@ -59,8 +62,8 @@ class CalendarFragment: Fragment() {
     // 선택된 날짜에 변화를 관찰하고, 변경 시 스케줄 날짜를 갱신합니다.
     CalendarUtil.selectedDate.observe(viewLifecycleOwner, Observer { value ->
       binding.scheduleDate.text = yearMonthFromDate(value)
+      scheduleList.clear()
       fetchEventsDataFromFirestore { result ->
-        scheduleList.clear()
         scheduleList.addAll(result)
         setUpScheduleView()
       }
@@ -156,18 +159,30 @@ class CalendarFragment: Fragment() {
           return@addSnapshotListener
         }
 
-        for (dc in snapshots!!.documentChanges) {
+        if (snapshots!!.documentChanges.size == 0) {
+          onComplete(dataList)
+        }
+
+        for (dc in snapshots.documentChanges) {
           when (dc.type) {
             DocumentChange.Type.ADDED -> {
               dataList.add(ScheduleModel.fromDocument(dc.document.data))
+              setMonthView()
               onComplete(dataList)
             }
+
             DocumentChange.Type.MODIFIED -> {
-              dataList.add(ScheduleModel.fromDocument(dc.document.data))
-              onComplete(dataList)
+              if (dc.document.data.get("eventID") == selectedScheduleData.eventID) {
+                scheduleList.removeAt(selectedSchedule)
+                scheduleList.add(ScheduleModel.fromDocument(dc.document.data))
+                setMonthView()
+                setUpScheduleView()
+              }
             }
+
             DocumentChange.Type.REMOVED -> {
               dataList.remove(ScheduleModel.fromDocument(dc.document.data))
+              setMonthView()
               onComplete(dataList)
             }
           }
@@ -213,6 +228,8 @@ class CalendarFragment: Fragment() {
     val position = item.groupId
     when (item.itemId) {
       0 -> {
+        selectedScheduleData = scheduleList[position]
+        selectedSchedule = position
         val scheduleFormFragment = ScheduleFormFragment.newInstance(
           isModify = true,
           data = scheduleList[position]
@@ -223,8 +240,29 @@ class CalendarFragment: Fragment() {
       }
       1 -> {
         // 삭제 버튼
-        scheduleList.removeAt(position)
-        updateData(scheduleList)
+        db.collection("Calendars")
+          .document("A9PHFsmDLUWbaYDdy2XX")
+          .collection("Events")
+          .whereEqualTo("eventLinkID", scheduleList[position].eventLinkID)
+          .get()
+          .addOnSuccessListener { querySnapshot ->
+            val batch = db.batch()
+
+            querySnapshot.documents.forEach { documentSnapshot ->
+              batch.delete(documentSnapshot.reference)
+            }
+
+            batch.commit()
+              .addOnSuccessListener {
+                Toast.makeText(requireContext(), "일정을 삭제했습니다!", Toast.LENGTH_SHORT).show()
+              }
+              .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "일정을 삭제하지 못했습니다!", Toast.LENGTH_SHORT).show()
+              }
+          }
+          .addOnFailureListener { e ->
+            Toast.makeText(requireContext(), "일정을 삭제하지 못했습니다!", Toast.LENGTH_SHORT).show()
+          }
         return true
       }
       else -> return super.onContextItemSelected(item)
