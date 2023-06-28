@@ -20,10 +20,25 @@
                       android:gravity="center"
                       android:orientation="vertical"
                       >
-            <ImageView android:layout_width="72dp" android:layout_height="72dp"
-                       android:background="@color/primary"/>
+            <LinearLayout
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                       android:background="@drawable/ic_user_profile">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="User"
+                          android:gravity="center"
+                          android:id="@+id/mypage_user_name"
+                          android:textColor="@color/inverse_text"
+                          android:maxLines="1"
+                          android:maxLength="3"
+                          android:textSize="18sp"
+                          android:fontFamily="@font/bold"/>
+            </LinearLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:text="변경"
+                      android:layout_marginTop="4dp"
                       android:textSize="14sp"
                       android:textColor="@color/primary"
                       android:fontFamily="@font/bold"/>
@@ -53,10 +68,13 @@
                       android:fontFamily="@font/bold"/>
             <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:layout_marginStart="16dp"
-                      android:hint="이름을 입력해주세요!"
+                      android:id="@+id/mypage_name"
+                      android:hint="최대 8자"
+                      android:inputType="text"
                       android:background="@android:color/transparent"
                       android:textColorHint="@color/hint_text"
                       android:textSize="16sp"
+                      android:maxLength="8"
                       android:textColor="@color/text"
                       android:fontFamily="@font/bold"/>
         </LinearLayout>
@@ -76,7 +94,9 @@
                       android:fontFamily="@font/bold"/>
             <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:layout_marginStart="16dp"
-                      android:hint="이메일을 입력해주세요!"
+                      android:id="@+id/mypage_email"
+                      android:inputType="textEmailAddress"
+                      android:hint="ex) no-reply@plancation.web.app"
                       android:textColorHint="@color/hint_text"
                       android:background="@android:color/transparent"
                       android:textSize="16sp"
@@ -111,11 +131,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                     android:background="@drawable/solid_button_shape"
+                android:enabled="false"
+                     android:background="@drawable/button_modify"
                      android:id="@+id/mypage_submit"
                 android:text="수정 완료"
                 android:fontFamily="@font/bold"
-                android:textColor="@color/inverse_primary"
+                android:textColor="@color/inverse_text"
                 android:textSize="18sp"/>
     </LinearLayout>
 

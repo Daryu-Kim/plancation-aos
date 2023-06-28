@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="42dp"
+        android:id="@+id/todo_date_layout"
+        android:background="@drawable/item_todo_date"
+        android:layout_marginHorizontal="8dp"
+        android:orientation="vertical"
+        android:elevation="@dimen/cardview_default_elevation"
+        android:layout_height="72dp">
+    <TextView
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/todo_date_day"
+            android:textAlignment="center"
+            android:background="@android:color/transparent"
+            android:text="목"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/medium"/>
+    <TextView
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/todo_date_date"
+            android:textAlignment="center"
+            android:background="@android:color/transparent"
+            android:text="28"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/medium"/>
+</RelativeLayout>

@@ -15,4 +15,6 @@
     <color name="inverse_primary">#8F91C7</color>
     <color name="error">#FF6666</color>
     <color name="background">#FFFFFF</color>
+    <color name="disabled">#888</color>
+    <color name="divider">#ccc</color>
 </resources>

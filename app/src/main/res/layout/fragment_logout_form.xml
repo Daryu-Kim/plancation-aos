@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/logout_form"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    <LinearLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/form_shape"
+            android:paddingHorizontal="32dp"
+            android:id="@+id/logout_form_bar_layout"
+            android:gravity="center"
+            android:paddingVertical="16dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/logout_form_bar_title"
+                  android:text="로그아웃 하시겠어요?"
+                  android:textColor="@color/white"
+                  android:textSize="18sp"
+                  android:fontFamily="@font/bold"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                                                   android:layout_height="72dp"
+                android:text="로그아웃"
+                android:textColor="@color/primary"
+                android:textSize="20sp"
+                android:fontFamily="@font/bold"
+                android:background="@android:color/transparent"
+                android:id="@+id/logout_form_submit"/>
+        <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                   android:background="@color/divider"/>
+        <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                                                   android:layout_height="72dp"
+                android:text="취소"
+                android:textColor="@color/error"
+                android:textSize="20sp"
+                android:fontFamily="@font/bold"
+                android:background="@android:color/transparent"
+                android:id="@+id/logout_form_cancel"/>
+
+    </LinearLayout>
+</LinearLayout>

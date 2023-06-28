@@ -14,4 +14,6 @@
     <color name="accent">#735BF2</color>
     <color name="inverse_primary">#494B7C</color>
     <color name="background">#161625</color>
+    <color name="disabled">#666</color>
+    <color name="divider">#363645</color>
 </resources>
