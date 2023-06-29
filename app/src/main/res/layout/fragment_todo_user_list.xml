@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/todo_user_list"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    <RelativeLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/form_shape"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="16dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="참여자 목록"
+                  android:layout_centerInParent="true"
+                  android:textColor="@color/white"
+                  android:textSize="18sp"
+                  android:fontFamily="@font/bold"/>
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent" android:layout_height="320dp"
+                                               android:paddingVertical="16dp"
+                                               android:paddingHorizontal="32dp"
+                                               android:background="@color/background"
+                                               android:id="@+id/todo_user_list_view"/>
+</LinearLayout>

@@ -1,30 +1,20 @@
 package com.daryukim.plancation
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.GradientDrawable.Orientation
-import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.daryukim.plancation.databinding.FragmentCalendarBinding
 import com.daryukim.plancation.databinding.FragmentTodoBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -123,7 +113,6 @@ class TodoFragment: Fragment() {
           when (dc.type) {
             DocumentChange.Type.ADDED -> {
               dataList.add(ScheduleModel.fromDocument(dc.document.data))
-//              setMonthView()
               onComplete(dataList)
             }
 
@@ -131,7 +120,6 @@ class TodoFragment: Fragment() {
 
             DocumentChange.Type.REMOVED -> {
               dataList.remove(ScheduleModel.fromDocument(dc.document.data))
-//              setMonthView()
               onComplete(dataList)
             }
           }
@@ -161,6 +149,21 @@ class TodoFragment: Fragment() {
     val position = item.groupId
     when (item.itemId) {
       0 -> {
+        db.collection("Calendars")
+          .document("A9PHFsmDLUWbaYDdy2XX")
+          .collection("Events")
+          .document(todoItemList[position].eventID)
+          .get()
+          .addOnSuccessListener {document ->
+            if (document != null) {
+              val todoUserListFragment = TodoUserListBottomSheet.newInstance(
+                data = ScheduleModel.fromDocument(document.data!!)
+              )
+              todoUserListFragment.show(childFragmentManager, todoUserListFragment.tag)
+            }
+          }
+          .addOnFailureListener {  }
+
         return true
       }
       1 -> {

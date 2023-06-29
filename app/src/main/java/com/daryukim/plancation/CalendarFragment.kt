@@ -46,18 +46,15 @@ class CalendarFragment: Fragment() {
     // 월별 캘린더 뷰를 설정합니다.
     setMonthView()
 
-    // 날짜 터치에 따라 스와이프 방향을 계산하고 이전 달 또는 다음 달로 이동합니다.
-    binding.calendarLayout.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
-      override fun onSwipeRight() {
-        CalendarUtil.selectedDate.value = CalendarUtil.selectedDate.value!!.minusMonths(1)
-        setMonthView()
-      }
+    binding.calendarDatePrev.setOnClickListener {
+      CalendarUtil.selectedDate.value = CalendarUtil.selectedDate.value!!.minusMonths(1)
+      setMonthView()
+    }
 
-      override fun onSwipeLeft() {
-        CalendarUtil.selectedDate.value = CalendarUtil.selectedDate.value!!.plusMonths(1)
-        setMonthView()
-      }
-    })
+    binding.calendarDateNext.setOnClickListener {
+      CalendarUtil.selectedDate.value = CalendarUtil.selectedDate.value!!.plusMonths(1)
+      setMonthView()
+    }
 
     // 선택된 날짜에 변화를 관찰하고, 변경 시 스케줄 날짜를 갱신합니다.
     CalendarUtil.selectedDate.observe(viewLifecycleOwner, Observer { value ->
@@ -136,6 +133,7 @@ class CalendarFragment: Fragment() {
 
     // 스케줄 날짜 텍스트에 선택된 날짜를 표시합니다.
     binding.scheduleDate.text = yearMonthFromDate(CalendarUtil.selectedDate.value!!)
+    binding.calendarDateTitle.text = CalendarUtil.selectedDate.value!!.format(DateTimeFormatter.ofPattern("yyyy년 MM월"))
   }
 
   private fun fetchEventsDataFromFirestore(onComplete: (List<ScheduleModel>) -> Unit) {
@@ -172,7 +170,7 @@ class CalendarFragment: Fragment() {
             }
 
             DocumentChange.Type.MODIFIED -> {
-              if (dc.document.data.get("eventID") == selectedScheduleData.eventID) {
+              if (dc.document.data["eventID"] == selectedScheduleData.eventID) {
                 scheduleList.removeAt(selectedSchedule)
                 scheduleList.add(ScheduleModel.fromDocument(dc.document.data))
                 setMonthView()

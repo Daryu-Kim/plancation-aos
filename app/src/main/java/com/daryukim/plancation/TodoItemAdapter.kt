@@ -39,11 +39,11 @@ class TodoItemAdapter(
     holder.itemTitle.text = todoItem.eventTitle
     holder.itemCount.text = "${todoItem.eventCheckUsers.size} / ${todoItem.eventUsers.size}"
     holder.itemCheckBox.setOnClickListener {
-      modifyUserChecked(holder, holder.itemCheckBox.isChecked)
+      modifyUserChecked(holder, holder.itemCheckBox.isChecked, position)
     }
   }
 
-  private fun modifyUserChecked(holder: TodoItemViewHolder, isChecked: Boolean) {
+  private fun modifyUserChecked(holder: TodoItemViewHolder, isChecked: Boolean, position: Int) {
     val eventTodoRef = db.collection("Calendars")
       .document("A9PHFsmDLUWbaYDdy2XX")
       .collection("Events")
@@ -52,7 +52,7 @@ class TodoItemAdapter(
     eventTodoRef
       .update("eventCheckUsers", if (isChecked) FieldValue.arrayUnion(auth.currentUser?.uid) else FieldValue.arrayRemove(auth.currentUser?.uid))
       .addOnSuccessListener { _ ->
-        readDocument(holder, eventTodoRef)
+        readDocument(holder, eventTodoRef, position)
       }
       .addOnFailureListener { _ ->
         Toast.makeText(holder.itemView.context, "체크 처리에 실패했습니다!", Toast.LENGTH_SHORT).show()
@@ -61,7 +61,7 @@ class TodoItemAdapter(
   }
 
   @SuppressLint("SetTextI18n")
-  private fun readDocument(holder: TodoItemViewHolder, ref: DocumentReference) {
+  private fun readDocument(holder: TodoItemViewHolder, ref: DocumentReference, position: Int) {
     ref.get()
       .addOnSuccessListener { document ->
         if (document != null) {

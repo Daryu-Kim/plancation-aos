@@ -17,4 +17,6 @@
     <color name="background">#FFFFFF</color>
     <color name="disabled">#888</color>
     <color name="divider">#ccc</color>
+    <color name="unchecked">#bbFF6666</color>
+    <color name="checked">#bb66FF66</color>
 </resources>
