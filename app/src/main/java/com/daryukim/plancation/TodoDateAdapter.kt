@@ -1,14 +1,13 @@
 package com.daryukim.plancation
 
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 class TodoDateAdapter(todoDateList: ArrayList<LocalDate>) : RecyclerView.Adapter<TodoDateAdapter.TodoDateViewHolder>() {
@@ -19,7 +18,7 @@ class TodoDateAdapter(todoDateList: ArrayList<LocalDate>) : RecyclerView.Adapter
 
   init {
     this.todoDateList = todoDateList
-    lastSelectedPosition = todoDateList.indexOf(CalendarUtil.selectedDate.value)
+    lastSelectedPosition = todoDateList.indexOf(TodoUtil.selectedDate.value)
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoDateViewHolder {
@@ -35,24 +34,39 @@ class TodoDateAdapter(todoDateList: ArrayList<LocalDate>) : RecyclerView.Adapter
   override fun onBindViewHolder(holder: TodoDateViewHolder, @SuppressLint("RecyclerView") position: Int) {
     val date: LocalDate = todoDateList[position]
 
-    if (CalendarUtil.selectedDate.value == date) {
+    if (TodoUtil.selectedDate.value == date) {
       holder.todoDateLayout.setBackgroundResource(R.drawable.item_selected_todo_date)
     } else {
       holder.todoDateLayout.setBackgroundResource(R.drawable.item_todo_date)
     }
+
+    holder.todoDateDay.text = date.dayOfWeek.getDisplayNameInKorean()
+    holder.todoDateDate.text = date.dayOfMonth.toString()
 
     holder.itemView.setOnClickListener(View.OnClickListener {
       if (date.year != 1) {
         if (lastSelectedPosition != -1) {
           notifyItemChanged(lastSelectedPosition)
         }
-        CalendarUtil.selectedDate.value = date
+        TodoUtil.selectedDate.value = date
 
-        holder.todoDateLayout.setBackgroundResource(R.drawable.calendar_solid_day)
+        holder.todoDateLayout.setBackgroundResource(R.drawable.item_selected_todo_date)
         lastSelectedPosition = position
         lastSelectedDate = date
       }
     })
+  }
+
+  private fun DayOfWeek.getDisplayNameInKorean(): String {
+    return when (this) {
+      DayOfWeek.MONDAY -> "월"
+      DayOfWeek.TUESDAY -> "화"
+      DayOfWeek.WEDNESDAY -> "수"
+      DayOfWeek.THURSDAY -> "목"
+      DayOfWeek.FRIDAY -> "금"
+      DayOfWeek.SATURDAY -> "토"
+      DayOfWeek.SUNDAY -> "일"
+    }
   }
 
   inner class TodoDateViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

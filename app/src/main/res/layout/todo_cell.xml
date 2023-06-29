@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="42dp"
+        android:layout_width="match_parent"
         android:id="@+id/todo_date_layout"
         android:background="@drawable/item_todo_date"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="4dp"
         android:orientation="vertical"
         android:elevation="@dimen/cardview_default_elevation"
-        android:layout_height="72dp">
+        android:layout_height="78dp">
     <TextView
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"

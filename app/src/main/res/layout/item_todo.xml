@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/todo_item_layout"
+        android:background="@drawable/form_todo_item"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:longClickable="true"
+        android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="16dp">
+        <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/todo_item_checkbox"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:checked="true"
+        android:button="@drawable/custom_checkbox"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:layout_marginStart="8dp"
+                      android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="와이어프레임 작업"
+                      android:id="@+id/todo_item_title"
+                      android:fontFamily="@font/bold"
+                      android:textSize="16sp"
+                      android:textColor="@color/text"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="14:00 ~ 15:00"
+                      android:id="@+id/todo_item_time"
+                      android:layout_marginTop="4dp"
+                      android:fontFamily="@font/medium"
+                      android:textSize="12sp"
+                      android:textColor="@color/text"/>
+        </LinearLayout>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="0 / 0"
+                  android:layout_gravity="center_vertical"
+                  android:textColor="@color/accent"
+                  android:fontFamily="@font/bold"
+                  android:layout_marginStart="8dp"
+                  android:textSize="16sp"
+                  android:id="@+id/todo_item_count"/>
+
+    </LinearLayout>
+</LinearLayout>

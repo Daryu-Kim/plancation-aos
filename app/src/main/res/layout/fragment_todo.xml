@@ -6,16 +6,68 @@
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical">
+                  android:orientation="vertical">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="16dp">
+            <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                         android:background="@drawable/ic_prev"
+                         android:layout_centerVertical="true"
+                         android:backgroundTint="@color/accent"
+                         android:id="@+id/todo_date_prev"
+                         android:layout_alignParentStart="true"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="2023년 6월"
+                      android:layout_centerInParent="true"
+                      android:id="@+id/todo_date_title"
+                      android:textSize="16sp"
+                      android:fontFamily="@font/bold"
+                      android:textColor="@color/text"/>
+            <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                         android:background="@drawable/ic_next"
+                         android:id="@+id/todo_date_next"
+                         android:backgroundTint="@color/accent"
+                         android:layout_centerVertical="true"
+                         android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content" android:paddingHorizontal="24dp"
                 android:id="@+id/todo_date"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/todo_list"/>
+        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+                                                           android:layout_height="match_parent"
+                                                           android:paddingVertical="16dp"
+                                                           android:paddingHorizontal="24dp"
+                                                           android:layout_marginTop="12dp">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/todo_list"/>
+
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:id="@+id/todo_item_empty_layout"
+                          android:visibility="gone"
+                          app:layout_constraintTop_toTopOf="parent"
+                          app:layout_constraintBottom_toBottomOf="parent"
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintEnd_toEndOf="parent"
+                          android:gravity="center">
+                <ImageView android:layout_width="32dp" android:layout_height="32dp"
+                           android:background="@drawable/ic_info"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="할 일이 없습니다!"
+                          android:layout_marginTop="4dp"
+                          android:textSize="18sp"
+                          android:fontFamily="@font/bold"
+                          android:textColor="@color/primary"/>
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

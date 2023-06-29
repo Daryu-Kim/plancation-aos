@@ -12,12 +12,35 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             tools:context=".MainActivity">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="16dp">
+            <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                         android:background="@drawable/ic_prev"
+                         android:layout_centerVertical="true"
+                         android:backgroundTint="@color/accent"
+                         android:id="@+id/calendar_date_prev"
+                         android:layout_alignParentStart="true"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="2023년 6월"
+                      android:layout_centerInParent="true"
+                      android:id="@+id/calendar_date_title"
+                      android:textSize="16sp"
+                      android:fontFamily="@font/bold"
+                      android:textColor="@color/text"/>
+            <ImageButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                         android:background="@drawable/ic_next"
+                         android:id="@+id/calendar_date_next"
+                         android:backgroundTint="@color/accent"
+                         android:layout_centerVertical="true"
+                         android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:id="@+id/calendar_layout"
                       android:orientation="vertical"
                       android:paddingHorizontal="24dp"
-                      android:paddingVertical="16dp">
+                      android:paddingBottom="16dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                           android:id="@+id/calendar_day_layout"
                           android:orientation="horizontal">
