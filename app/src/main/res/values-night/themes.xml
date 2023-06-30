@@ -32,4 +32,8 @@
     <style name="DatePickerTheme" parent="android:ThemeOverlay.Material.Dark">
         <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
+
+    <style name="TimePickerTheme" parent="android:ThemeOverlay.Material.Dark">
+        <item name="android:datePickerStyle">@style/TimePickerStyle</item>
+    </style>
 </resources>

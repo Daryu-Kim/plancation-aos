@@ -21,6 +21,7 @@
                       android:orientation="vertical"
                       >
             <LinearLayout
+                    android:id="@+id/mypage_user_img"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:orientation="vertical"
@@ -36,7 +37,13 @@
                           android:textSize="18sp"
                           android:fontFamily="@font/bold"/>
             </LinearLayout>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/mypage_user_img_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:minHeight="24dp"
+                    android:minWidth="0dp"
                       android:text="변경"
                       android:layout_marginTop="4dp"
                       android:textSize="14sp"

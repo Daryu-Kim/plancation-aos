@@ -9,7 +9,7 @@ data class ScheduleModel(
   val eventID: String = "",
   val eventTitle: String = "",
   val eventTime: Timestamp = Timestamp.now(),
-  val eventUsers: ArrayList<String> = ArrayList(),
+  var eventUsers: ArrayList<String> = ArrayList(),
   val eventAlerts: Map<String, Any> = mapOf(),
   val eventAuthorID: String = "",
   val eventIsTodo: Boolean = false,
@@ -21,7 +21,9 @@ data class ScheduleModel(
     "blueColor" to 242
   ),
   val eventLocation: ParcelableGeoPoint = ParcelableGeoPoint(GeoPoint(0.0, 0.0)),
-  val eventLinkID: String = ""
+  val eventLinkID: String = "",
+  val eventSTime: Timestamp = Timestamp.now(),
+  val eventETime: Timestamp = Timestamp.now()
 ): Parcelable {
   constructor(parcel: Parcel) : this(
     parcel.readString() ?: "",
@@ -34,7 +36,9 @@ data class ScheduleModel(
     parcel.createStringArrayList() ?: arrayListOf(),
     parcel.readHashMap(null) as Map<String, Int>,
     parcel.readParcelable(ParcelableGeoPoint::class.java.classLoader)!!,
-    parcel.readString() ?: ""
+    parcel.readString() ?: "",
+    parcel.readParcelable(Timestamp::class.java.classLoader)!!,
+    parcel.readParcelable(Timestamp::class.java.classLoader)!!
   )
 
   override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -49,6 +53,8 @@ data class ScheduleModel(
     parcel.writeMap(eventBackgroundColor)
     parcel.writeParcelable(eventLocation, flags)
     parcel.writeString(eventLinkID)
+    parcel.writeParcelable(eventSTime, flags)
+    parcel.writeParcelable(eventETime, flags)
   }
 
   override fun describeContents(): Int {
@@ -76,7 +82,9 @@ data class ScheduleModel(
         eventCheckUsers = document["eventCheckUsers"] as ArrayList<String>,
         eventBackgroundColor = document["eventBackgroundColor"] as Map<String, Int>,
         eventLocation = ParcelableGeoPoint(document["eventLocation"] as GeoPoint),
-        eventLinkID = document["eventLinkID"] as String
+        eventLinkID = document["eventLinkID"] as String,
+        eventSTime = document["eventSTime"] as Timestamp,
+        eventETime = document["eventETime"] as Timestamp
       )
     }
   }

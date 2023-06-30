@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.daryukim.plancation.databinding.FragmentTodoBinding
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDate
@@ -24,6 +25,7 @@ class TodoFragment: Fragment() {
   private var _binding: FragmentTodoBinding? = null
   private val binding get() = _binding!!
   private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+  private val auth: FirebaseAuth = FirebaseAuth.getInstance()
   private var todoItemList: ArrayList<ScheduleModel> = ArrayList()
 
   // 프래그먼트 생성 시 뷰 설정
@@ -35,11 +37,7 @@ class TodoFragment: Fragment() {
 
     TodoUtil.selectedDate.observe(viewLifecycleOwner, Observer { value ->
       binding.todoDateTitle.text = TodoUtil.selectedDate.value!!.format(DateTimeFormatter.ofPattern("yyyy년 MM월"))
-      todoItemList.clear()
-      fetchEventsDataFromFirestore { result ->
-        todoItemList.addAll(result)
-        setUpTodoListView()
-      }
+      setupTodoItems()
     })
 
     setUpTodoDateView(setItems(TodoUtil.selectedDate.value!!))
@@ -49,12 +47,34 @@ class TodoFragment: Fragment() {
       TodoUtil.selectedDate.value = TodoUtil.selectedDate.value!!.minusDays(7)
       setUpTodoDateView(setItems(TodoUtil.selectedDate.value!!))
     }
+
     binding.todoDateNext.setOnClickListener {
       TodoUtil.selectedDate.value = TodoUtil.selectedDate.value!!.plusDays(7)
       setUpTodoDateView(setItems(TodoUtil.selectedDate.value!!))
     }
 
+    binding.todoAddButton.setOnClickListener {
+      val todoFormBottomSheet = TodoFormFragment()
+      todoFormBottomSheet.setOnFormSubmittedListener { _ ->
+        setupTodoItems()
+      }
+      todoFormBottomSheet.show(parentFragmentManager, "todoForm")
+    }
+
+    binding.todoListLayout.setOnRefreshListener {
+      setupTodoItems()
+    }
+
     return view
+  }
+
+  private fun setupTodoItems() {
+    todoItemList.clear()
+    fetchEventsDataFromFirestore { result ->
+      todoItemList.addAll(result)
+      setUpTodoListView()
+      binding.todoListLayout.isRefreshing = false
+    }
   }
 
   private fun setItems(date: LocalDate): ArrayList<LocalDate> {
@@ -99,31 +119,16 @@ class TodoFragment: Fragment() {
       .whereEqualTo("eventIsTodo", true)
       .whereGreaterThanOrEqualTo("eventTime", Timestamp(startDate))
       .whereLessThan("eventTime", Timestamp(endDate))
-      .addSnapshotListener { snapshots, e ->
-        if (e != null) {
-          Toast.makeText(requireContext(), "할 일을 불러오지 못했습니다!", Toast.LENGTH_SHORT).show()
-          return@addSnapshotListener
+      .get()
+      .addOnSuccessListener { documents ->
+        for (document in documents) {
+          dataList.add(ScheduleModel.fromDocument(document.data))
         }
+        onComplete(dataList)
 
-        if (snapshots!!.documentChanges.size == 0) {
-          onComplete(dataList)
-        }
-
-        for (dc in snapshots.documentChanges) {
-          when (dc.type) {
-            DocumentChange.Type.ADDED -> {
-              dataList.add(ScheduleModel.fromDocument(dc.document.data))
-              onComplete(dataList)
-            }
-
-            DocumentChange.Type.MODIFIED -> {}
-
-            DocumentChange.Type.REMOVED -> {
-              dataList.remove(ScheduleModel.fromDocument(dc.document.data))
-              onComplete(dataList)
-            }
-          }
-        }
+      }
+      .addOnFailureListener {
+        onComplete(listOf())
       }
   }
 
@@ -167,30 +172,34 @@ class TodoFragment: Fragment() {
         return true
       }
       1 -> {
-        // 삭제 버튼
-        db.collection("Calendars")
-          .document("A9PHFsmDLUWbaYDdy2XX")
-          .collection("Events")
-          .whereEqualTo("eventLinkID", todoItemList[position].eventLinkID)
-          .get()
-          .addOnSuccessListener { querySnapshot ->
-            val batch = db.batch()
+        if (auth.currentUser?.uid == todoItemList[position].eventAuthorID) {
+          db.collection("Calendars")
+            .document("A9PHFsmDLUWbaYDdy2XX")
+            .collection("Events")
+            .whereEqualTo("eventLinkID", todoItemList[position].eventLinkID)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+              val batch = db.batch()
 
-            querySnapshot.documents.forEach { documentSnapshot ->
-              batch.delete(documentSnapshot.reference)
+              querySnapshot.documents.forEach { documentSnapshot ->
+                batch.delete(documentSnapshot.reference)
+              }
+
+              batch.commit()
+                .addOnSuccessListener {
+                  Toast.makeText(requireContext(), "할 일을 삭제했습니다!", Toast.LENGTH_SHORT).show()
+                  setupTodoItems()
+                }
+                .addOnFailureListener { e ->
+                  Toast.makeText(requireContext(), "할 일을 삭제하지 못했습니다!", Toast.LENGTH_SHORT).show()
+                }
             }
-
-            batch.commit()
-              .addOnSuccessListener {
-                Toast.makeText(requireContext(), "할 일을 삭제했습니다!", Toast.LENGTH_SHORT).show()
-              }
-              .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "할 일을 삭제하지 못했습니다!", Toast.LENGTH_SHORT).show()
-              }
-          }
-          .addOnFailureListener { e ->
-            Toast.makeText(requireContext(), "할 일을 삭제하지 못했습니다!", Toast.LENGTH_SHORT).show()
-          }
+            .addOnFailureListener { e ->
+              Toast.makeText(requireContext(), "할 일을 삭제하지 못했습니다!", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+          Toast.makeText(requireContext(), "작성자만 삭제할 수 있습니다!", Toast.LENGTH_SHORT).show()
+        }
         return true
       }
       else -> return super.onContextItemSelected(item)

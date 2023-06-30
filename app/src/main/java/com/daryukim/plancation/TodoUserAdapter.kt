@@ -71,9 +71,6 @@ class TodoUserAdapter(
       }
   }
 
-  private fun getCheckData(holder: TodoUserViewHolder) {
-  }
-
   inner class TodoUserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val itemImg: View = itemView.findViewById(R.id.todo_user_img)
     val itemImgName: TextView = itemView.findViewById(R.id.todo_user_img_name)

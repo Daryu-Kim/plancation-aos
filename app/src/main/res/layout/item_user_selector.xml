@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/user_selector_item_layout"
+        android:background="@drawable/form_todo_item"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="16dp"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:id="@+id/user_selector_img"
+            android:background="@drawable/ic_user_profile">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:maxLength="3"
+                  android:id="@+id/user_selector_img_name"
+                  android:text="ㅁㄴㅇㄹ"
+                  android:gravity="center"
+                  android:textColor="@color/white"
+                  android:textSize="10sp"
+                  android:fontFamily="@font/bold" android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+              android:text="와이어프레임 작업"
+              android:id="@+id/user_selector_name"
+              android:fontFamily="@font/bold"
+              android:layout_weight="1"
+              android:layout_marginStart="8dp"
+              android:maxLines="1"
+              android:ellipsize="end"
+              android:textSize="16sp"
+              android:textColor="@color/text"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/user_selector_item_checkbox"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:checked="false"
+            android:button="@drawable/custom_checkbox"/>
+</LinearLayout>

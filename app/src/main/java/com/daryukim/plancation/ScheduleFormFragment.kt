@@ -45,6 +45,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
 
   private val db: FirebaseFirestore
   private val auth: FirebaseAuth
+  private lateinit var onFormSubmittedListener: (Boolean) -> Unit
 
   private var data: ScheduleModel = ScheduleModel()
 
@@ -214,6 +215,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
         updateScheduleToFirestore()
         Toast.makeText(requireContext(), "일정을 성공적으로 수정했습니다!", Toast.LENGTH_SHORT).show()
         dismiss()
+        onFormSubmittedListener(true)
       } catch (e: FirebaseFirestoreException) {
         Toast.makeText(requireContext(), "일정을 수정하지 못했습니다!", Toast.LENGTH_SHORT).show()
       }
@@ -222,6 +224,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
         addScheduleToFirestore()
         Toast.makeText(requireContext(), "일정을 성공적으로 생성했습니다!", Toast.LENGTH_SHORT).show()
         dismiss()
+        onFormSubmittedListener(true)
       } catch (e: FirebaseFirestoreException) {
         Toast.makeText(requireContext(), "일정을 생성하지 못했습니다!", Toast.LENGTH_SHORT).show()
       }
@@ -294,7 +297,9 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
         dataLocation["latitude"]!!,
         dataLocation["longitude"]!!
       ),
-      "eventLinkID" to eventLinkID
+      "eventLinkID" to eventLinkID,
+      "eventSTime" to eventTime,
+      "eventETime" to eventTime,
     )
   }
 
@@ -459,6 +464,10 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
         )
     }
     colorPickerBottomSheet.show(parentFragmentManager, "colorPicker")
+  }
+
+  fun setOnFormSubmittedListener(listener: (Boolean) -> Unit) {
+    onFormSubmittedListener = listener
   }
 
   companion object {

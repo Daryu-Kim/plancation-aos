@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnCreateContextMenuListener
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TodoItemAdapter(
   private val todoItemList: List<ScheduleModel>,
@@ -35,11 +37,23 @@ class TodoItemAdapter(
   override fun onBindViewHolder(holder: TodoItemViewHolder, @SuppressLint("RecyclerView") position: Int) {
     todoItem = todoItemList[position]
 
+    holder.itemCheckBox.isEnabled = todoItem.eventUsers.contains(auth.currentUser?.uid)
     holder.itemCheckBox.isChecked = todoItem.eventCheckUsers.contains(auth.currentUser?.uid)
     holder.itemTitle.text = todoItem.eventTitle
+    holder.itemTime.visibility = if (todoItem.eventSTime.toDate().time == todoItem.eventETime.toDate().time) GONE else VISIBLE
+    holder.itemTime.text = "${formatTimestampToHHMM(todoItem.eventSTime.toDate())} ~ ${formatTimestampToHHMM(todoItem.eventETime.toDate())}"
     holder.itemCount.text = "${todoItem.eventCheckUsers.size} / ${todoItem.eventUsers.size}"
     holder.itemCheckBox.setOnClickListener {
       modifyUserChecked(holder, holder.itemCheckBox.isChecked, position)
+    }
+  }
+
+  private fun formatTimestampToHHMM(date: Date?): String {
+    return if (date != null) {
+      val formatter = SimpleDateFormat("HH : mm", Locale.getDefault())
+      formatter.format(date)
+    } else {
+      ""
     }
   }
 
@@ -47,7 +61,7 @@ class TodoItemAdapter(
     val eventTodoRef = db.collection("Calendars")
       .document("A9PHFsmDLUWbaYDdy2XX")
       .collection("Events")
-      .document(todoItem.eventID)
+      .document(todoItemList[position].eventID)
 
     eventTodoRef
       .update("eventCheckUsers", if (isChecked) FieldValue.arrayUnion(auth.currentUser?.uid) else FieldValue.arrayRemove(auth.currentUser?.uid))

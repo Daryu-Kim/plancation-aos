@@ -53,4 +53,13 @@
         <item name="android:textColorHint">@color/hint_text</item>
     </style>
 
+    <style name="TimePickerTheme" parent="android:ThemeOverlay.Material.Light">
+        <item name="android:datePickerStyle">@style/TimePickerStyle</item>
+    </style>
+
+    <style name="TimePickerStyle" parent="android:Widget.Material.TimePicker">
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:timePickerMode">spinner</item>
+    </style>
+
 </resources>
