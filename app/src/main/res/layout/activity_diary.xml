@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/background"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/inverse_primary"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp"
+            android:id="@+id/app_bar_layout">
+
+        <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                     android:background="@drawable/ic_prev"
+                     android:layout_centerVertical="true"
+                     android:id="@+id/app_bar_prev"
+                     android:backgroundTint="@color/white"
+                     android:layout_alignParentStart="true"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="내 캘린더"
+                  android:layout_centerInParent="true"
+                  android:background="@color/inverse_primary"
+                  android:id="@+id/app_bar_title"
+                  android:fontFamily="@font/bold"
+                  android:textColor="@color/white"
+                  android:textSize="18sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:background="@android:color/transparent"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:textSize="16sp"
+                android:id="@+id/app_bar_btn"
+                android:visibility="gone"
+                android:text="관리"
+                android:textColor="@color/white"
+                android:fontFamily="@font/medium"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp"
+            android:id="@+id/diary_layout">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:gravity="center_vertical">
+            <RelativeLayout android:layout_width="56dp" android:layout_height="56dp"
+                            android:id="@+id/diary_user_image"
+                            android:background="@drawable/ic_user_profile">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="User"
+                          android:gravity="center"
+                          android:layout_centerInParent="true"
+                          android:id="@+id/diary_user_image_name"
+                          android:textColor="@color/inverse_text"
+                          android:maxLines="1"
+                          android:maxLength="3"
+                          android:textSize="18sp"
+                          android:fontFamily="@font/bold"/>
+            </RelativeLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginStart="12dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:background="@drawable/item_diary_user"
+                          android:text="강해민"
+                          android:id="@+id/diary_user_name"
+                          android:maxLines="1"
+                          android:ellipsize="end"
+                          android:textSize="14sp"
+                          android:textColor="@color/inverse_text"
+                          android:fontFamily="@font/medium"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="테스트 글 제목 입니다!"
+                          android:id="@+id/diary_post_title"
+                          android:textColor="@color/text"
+                          android:textSize="18sp"
+                          android:fontFamily="@font/bold"
+                          android:layout_marginTop="2dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:layout_marginTop="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="vertical">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/diary_post_image_layout"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="16dp"
+                        android:layout_height="wrap_content">
+                    <ImageView
+                            android:id="@+id/diary_post_image"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="1:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:scaleType="centerCrop"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="@string/agree_terms"
+                          android:id="@+id/diary_post_content"
+                          android:fontFamily="@font/medium"
+                          android:textSize="16sp"
+                          android:textColor="@color/text"/>
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

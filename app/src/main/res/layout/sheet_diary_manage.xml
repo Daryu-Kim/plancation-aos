@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/diary_manage_layout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/transparent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/form_shape"
+            android:paddingVertical="16dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="게시물 관리"
+                  android:layout_centerInParent="true"
+                  android:textColor="@color/white"
+                  android:textSize="16sp"
+                  android:fontFamily="@font/bold"/>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/diary_manage_menu_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:background="@android:color/transparent"
+                android:text="수정"
+                android:textSize="20sp"
+                android:textColor="@color/primary"
+                android:fontFamily="@font/bold"
+                android:id="@+id/diary_manage_menu_edit"/>
+        <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                   android:background="@color/divider"/>
+        <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:background="@android:color/transparent"
+                android:text="삭제"
+                android:textSize="20sp"
+                android:textColor="@color/error"
+                android:fontFamily="@font/bold"
+                android:id="@+id/diary_manage_menu_delete"/>
+    </LinearLayout>
+
+</LinearLayout>

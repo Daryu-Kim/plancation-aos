@@ -23,13 +23,14 @@ class MainActivity : AppCompatActivity() {
         val selectedFragment: Fragment = when (item.itemId) {
             R.id.nav_calendar -> CalendarFragment()
             R.id.nav_todo -> TodoFragment()
+            R.id.nav_diary -> DiaryFragment()
             R.id.nav_my -> MyPageFragment()
             else -> CalendarFragment()
         }
         binding.appBarTitle.text = when (item.itemId) {
             R.id.nav_calendar -> "캘린더"
             R.id.nav_todo -> "할 일 목록"
-//            CalendarFragment() -> "캘린더"
+            R.id.nav_diary -> "기록"
 //            CalendarFragment() -> "캘린더"
             R.id.nav_my -> "내 계정"
             else -> "캘린더"

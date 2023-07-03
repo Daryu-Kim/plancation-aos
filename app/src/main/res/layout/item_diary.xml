@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/diary_item_layout"
+              android:layout_marginBottom="8dp"
+              android:paddingVertical="12dp"
+              android:background="@drawable/form_diary_item"
+              android:paddingHorizontal="16dp">
+    <LinearLayout android:layout_width="36dp"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:orientation="vertical">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:fontFamily="@font/bold"
+                  android:textSize="12sp"
+                  android:id="@+id/diary_item_day"
+                  android:textColor="@color/accent"
+                  android:text="WED"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:fontFamily="@font/bold"
+                  android:textSize="24sp"
+                  android:id="@+id/diary_item_date"
+                  android:textColor="@color/accent"
+                  android:gravity="center"
+                  android:text="26"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:layout_marginStart="12dp"
+                  android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="강해민"
+                      android:background="@drawable/item_diary_user"
+                      android:id="@+id/diary_item_user"
+                      android:fontFamily="@font/medium"
+                      android:textSize="14sp"
+                      android:layout_marginEnd="6dp"
+                      android:textColor="@color/inverse_text"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:text="와이어프레임 작업"
+                      android:id="@+id/diary_item_title"
+                      android:fontFamily="@font/bold"
+                      android:maxLines="1"
+                      android:ellipsize="end"
+                      android:textSize="16sp"
+                      android:textColor="@color/text"/>
+        </LinearLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:maxLines="3"
+                  android:ellipsize="end"
+                  android:id="@+id/diary_item_content"
+                  android:text="4702913h740923740v1927312b03471v2b3947123412397v1032719037bv190890890890890289701v327098b24308478237b410289b749127bv8932b74912b374123b7v1b7409"
+                  android:fontFamily="@font/bold"
+                  android:textSize="12sp"
+                  android:textColor="@color/hint_text"
+                  android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+    <ImageView android:layout_width="64dp" android:layout_height="64dp"
+               android:scaleType="centerCrop"
+               android:layout_marginStart="16dp"
+               android:visibility="visible"
+               android:id="@+id/diary_item_image"/>
+
+</LinearLayout>

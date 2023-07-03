@@ -33,6 +33,7 @@ class MyPageFragment : Fragment() {
   private val binding get() = _binding!!
 
   private val db = FirebaseFirestore.getInstance()
+
   // FirebaseAuth 인스턴스 생성
   private val auth = FirebaseAuth.getInstance()
 
@@ -68,7 +69,8 @@ class MyPageFragment : Fragment() {
 
   // 변경 사항이 있는지 확인하고 저장 버튼의 활성화를 제어하는 메서드
   private fun isFormChanged() {
-    binding.mypageSubmit.isEnabled = binding.mypageName.text.toString() != beforeName || binding.mypageEmail.text.toString() != beforeEmail
+    binding.mypageSubmit.isEnabled =
+      binding.mypageName.text.toString() != beforeName || binding.mypageEmail.text.toString() != beforeEmail
   }
 
   // 텍스트 변경 리스너를 설정하는 메서드
