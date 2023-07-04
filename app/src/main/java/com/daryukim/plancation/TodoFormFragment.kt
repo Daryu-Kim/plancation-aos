@@ -142,7 +142,7 @@ class TodoFormFragment : BottomSheetDialogFragment() {
     val eventData = createEventData(eventID, eventLinkID)
 
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
       .collection("Events")
       .document(eventID)
       .set(eventData)

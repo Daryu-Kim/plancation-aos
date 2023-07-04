@@ -233,7 +233,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
 
   private fun updateScheduleToFirestore() {
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
       .collection("Events")
       .whereEqualTo("eventLinkID", data.eventLinkID)
       .get()
@@ -256,7 +256,7 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
       val eventData = createEventData(eventID, i, eventLinkID, dateCount > 0)
 
       db.collection("Calendars")
-        .document("A9PHFsmDLUWbaYDdy2XX")
+        .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
         .collection("Events")
         .document(eventID)
         .set(eventData)

@@ -157,7 +157,7 @@ class CalendarFragment: Fragment() {
     val dataList = mutableListOf<ScheduleModel>()
 
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
       .collection("Events")
       .whereEqualTo("eventIsTodo", false)
       .whereGreaterThanOrEqualTo("eventTime", Timestamp(startDate))
@@ -228,7 +228,7 @@ class CalendarFragment: Fragment() {
       1 -> {
         if (auth.currentUser?.uid == scheduleList[position].eventAuthorID) {
           db.collection("Calendars")
-            .document("A9PHFsmDLUWbaYDdy2XX")
+            .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
             .collection("Events")
             .whereEqualTo("eventLinkID", scheduleList[position].eventLinkID)
             .get()

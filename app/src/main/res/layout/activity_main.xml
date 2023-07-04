@@ -1,77 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.drawerlayout.widget.DrawerLayout
+        android:layout_width="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        tools:context=".MainActivity">
-
+        android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/inverse_primary"
-            android:paddingVertical="16dp"
-            android:paddingHorizontal="24dp"
-            android:id="@+id/app_bar_layout">
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            tools:context=".MainActivity">
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:gravity="center_vertical"
-                      android:background="@color/inverse_primary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
 
-            <ImageButton android:layout_width="28dp" android:layout_height="28dp"
-            android:background="@drawable/ic_menu"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/inverse_primary"
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="24dp"
+                android:id="@+id/app_bar_layout">
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="내 캘린더"
-                      android:layout_marginStart="8dp"
-                      android:background="@color/inverse_primary"
-                      android:id="@+id/app_bar_title"
-                      android:fontFamily="@font/bold"
-                      android:textColor="@color/white"
-                      android:textSize="18sp"/>
-        </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:gravity="center_vertical"
+                          android:background="@color/inverse_primary"
+                          app:layout_constraintTop_toTopOf="parent"
+                          app:layout_constraintLeft_toLeftOf="parent"
+                          app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:gravity="center_vertical"
-                      android:background="@color/inverse_primary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+                <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                             android:id="@+id/app_bar_sidebar_btn"
+                             android:background="@drawable/ic_menu"/>
 
-            <ImageButton android:layout_width="28dp" android:layout_height="28dp"
-            android:background="@drawable/ic_search"/>
-            <ImageButton android:layout_width="28dp" android:layout_height="28dp"
-                         android:layout_marginStart="8dp"
-            android:background="@drawable/ic_info"/>
-        </LinearLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="내 캘린더"
+                          android:layout_marginStart="8dp"
+                          android:background="@color/inverse_primary"
+                          android:id="@+id/app_bar_title"
+                          android:fontFamily="@font/bold"
+                          android:textColor="@color/white"
+                          android:textSize="18sp"/>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:gravity="center_vertical"
+                          android:background="@color/inverse_primary"
+                          app:layout_constraintTop_toTopOf="parent"
+                          app:layout_constraintRight_toRightOf="parent"
+                          app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                             android:background="@drawable/ic_search"/>
+                <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                             android:layout_marginStart="8dp"
+                             android:background="@drawable/ic_info"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/fragment_layout"
+                app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+                app:layout_constraintBottom_toTopOf="@id/bottom_navigation"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bottom_navigation"
+                app:menu="@menu/bottom_nav_menu"
+                android:background="@color/background"
+                app:itemBackground="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:id="@+id/fragment_layout"
-            app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-    app:layout_constraintBottom_toTopOf="@id/bottom_navigation"/>
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/side_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      android:background="@color/background"
+                      android:paddingVertical="36dp"
+                      android:paddingHorizontal="24dp">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <RelativeLayout android:layout_width="40dp" android:layout_height="40dp"
+                                android:background="@drawable/ic_user_profile"
+                                android:id="@+id/side_user_img"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentStart="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:text="강해민"
+                              android:fontFamily="@font/bold"
+                              android:id="@+id/side_user_img_name"
+                              android:textSize="12sp"
+                              android:maxLength="3"
+                              android:textColor="@color/white"
+                              android:layout_centerInParent="true"/>
+                </RelativeLayout>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:maxLines="1"
+                          android:ellipsize="end"
+                          android:text="강해민"
+                          android:textSize="16sp"
+                          android:id="@+id/side_user_name"
+                          android:textColor="@color/text"
+                          android:fontFamily="@font/medium"
+                          android:layout_centerVertical="true"
+                          android:layout_marginStart="8dp"
+                          android:layout_toEndOf="@id/side_user_img"/>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/bottom_navigation"
-            app:menu="@menu/bottom_nav_menu"
-            android:background="@color/background"
-            app:itemBackground="@android:color/transparent"
-            app:layout_constraintBottom_toBottomOf="parent">
+                <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                             android:background="@drawable/ic_gear"
+                             android:backgroundTint="@color/primary"
+                             android:id="@+id/side_setting"
+                             android:layout_centerVertical="true"
+                             android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:id="@+id/side_current_calendar_layout"
+                            android:layout_marginTop="16dp">
+                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                           android:background="@drawable/ic_right"
+                           android:backgroundTint="@color/primary"
+                           android:id="@+id/side_current_calendar_arrow"
+                           android:layout_centerVertical="true"
+                           android:layout_alignParentStart="true"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="현재 캘린더"
+                          android:textSize="12sp"
+                          android:layout_marginStart="8dp"
+                          android:fontFamily="@font/medium"
+                          android:layout_toEndOf="@id/side_current_calendar_arrow"
+                          android:layout_centerVertical="true"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="내 캘린더"
+                          android:textSize="12sp"
+                          android:id="@+id/side_current_calendar_name"
+                          android:fontFamily="@font/bold"
+                          android:textColor="@color/text"
+                          android:layout_alignParentEnd="true"
+                          android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
+                                                       android:id="@+id/side_current_calendar_list"
+                                                       android:visibility="gone"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
+
+</androidx.drawerlayout.widget.DrawerLayout>

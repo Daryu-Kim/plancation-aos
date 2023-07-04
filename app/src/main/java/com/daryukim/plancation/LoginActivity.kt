@@ -68,6 +68,7 @@ class LoginActivity : AppCompatActivity() {
             )
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+                        Application.prefs.setString("currentCalendar", auth.currentUser!!.uid)
                         startActivity(Intent(this, MainActivity::class.java))
                     } else {
                         Toast.makeText(this, "로그인 실패: " + task.exception?.message, Toast.LENGTH_SHORT).show()
@@ -95,6 +96,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    Application.prefs.setString("currentCalendar", auth.currentUser!!.uid)
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
                     Log.w("TAG", "signInWithCredential:failure", task.exception)

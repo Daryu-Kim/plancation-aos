@@ -83,7 +83,7 @@ class DiaryActivity : AppCompatActivity() {
             }
             1 -> {
               db.collection("Calendars")
-                .document("A9PHFsmDLUWbaYDdy2XX")
+                .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
                 .collection("Posts")
                 .document(data.postID)
                 .delete()

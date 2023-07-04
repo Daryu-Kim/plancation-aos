@@ -39,7 +39,6 @@ class CalendarAdapter(dayList: ArrayList<LocalDate>) : RecyclerView.Adapter<Cale
   override fun onBindViewHolder(holder: CalendarViewHolder, @SuppressLint("RecyclerView") position: Int) {
     val day: LocalDate = dayList[position]
 
-    Log.d("Date", "Request Date is " + CalendarUtil.selectedDate)
     if (day.year == 1) {
       holder.dayTextView.text = ""
     } else {

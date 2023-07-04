@@ -27,11 +27,11 @@ class UserSelectorBottomSheet(eventUsers: ArrayList<String>) : BottomSheetDialog
     val view = binding.root
 
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
       .get()
       .addOnSuccessListener { calendar ->
         if (calendar != null) {
-          calendarUserList = (calendar.data!!["users"] as ArrayList<String>)
+          calendarUserList = (calendar.data!!["calendarUsers"] as ArrayList<String>)
           setupUserSelector()
         }
       }

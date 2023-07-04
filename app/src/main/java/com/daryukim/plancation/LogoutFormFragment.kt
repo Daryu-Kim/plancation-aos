@@ -42,11 +42,7 @@ import kotlin.math.max
 class LogoutFormFragment : BottomSheetDialogFragment() {
   private var _binding: FragmentLogoutFormBinding? = null
   private val binding get() = _binding!!
-  private val auth: FirebaseAuth
-
-  init {
-    auth = Firebase.auth
-  }
+  private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
   // 프래그먼트 생성 시 뷰 설정
   override fun onCreateView(
@@ -74,6 +70,7 @@ class LogoutFormFragment : BottomSheetDialogFragment() {
   }
 
   private fun onSubmitButtonClick() {
+    Application.prefs.clear()
     auth.signOut()
     dismiss()
     startActivity(Intent(requireContext(), LoginMainActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))

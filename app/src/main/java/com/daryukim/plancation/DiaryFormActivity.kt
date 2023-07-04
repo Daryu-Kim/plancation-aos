@@ -80,7 +80,7 @@ class DiaryFormActivity : AppCompatActivity() {
 
   private fun setFirestoreData(isModify: Boolean) {
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
       .collection("Posts")
       .document(data!!.postID)
       .set(data!!)

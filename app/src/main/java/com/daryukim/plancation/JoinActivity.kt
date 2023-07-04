@@ -50,10 +50,25 @@ class JoinActivity : AppCompatActivity() {
       .addOnCompleteListener(this) { task ->
         if (task.isSuccessful) {
           changeUserName(auth.currentUser)
-          startActivity(Intent(this, MainActivity::class.java))
+          createUserCalendar()
         } else {
           Toast.makeText(this, "회원가입 실패: " + task.exception?.message, Toast.LENGTH_SHORT).show()
         }
+      }
+  }
+
+  private fun createUserCalendar() {
+    Application.db.collection("Calendars")
+      .document(Application.auth.currentUser!!.uid)
+      .set({
+        "calendarUsers" to listOf<String>(Application.auth.currentUser!!.uid)
+        "calendarAuthorID" to Application.auth.currentUser!!.uid
+        "calendarTitle" to "내 캘린더"
+        "calendarID" to Application.auth.currentUser!!.uid
+      })
+      .addOnSuccessListener {
+        Application.prefs.setString("currentCalendar", auth.currentUser!!.uid)
+        startActivity(Intent(this, MainActivity::class.java))
       }
   }
 

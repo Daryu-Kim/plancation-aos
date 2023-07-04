@@ -27,7 +27,7 @@ class DiaryManageBottomSheet() : BottomSheetDialogFragment() {
 
     binding.diaryManageMenuDelete.setOnClickListener {
       db.collection("Calendars")
-        .document("A9PHFsmDLUWbaYDdy2XX")
+        .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
         .collection("Posts")
       onUserSelectedListener(1)
       dismiss()

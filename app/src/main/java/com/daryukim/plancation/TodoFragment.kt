@@ -29,7 +29,7 @@ class TodoFragment: Fragment() {
   private var todoItemList: ArrayList<ScheduleModel> = ArrayList()
 
   // 프래그먼트 생성 시 뷰 설정
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     // 바인딩 객체를 생성하고 화면 레이아웃을 동적으로 연결합니다.
     _binding = FragmentTodoBinding.inflate(inflater, container, false)
     val view = binding.root
@@ -114,7 +114,7 @@ class TodoFragment: Fragment() {
     val dataList = mutableListOf<ScheduleModel>()
 
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
       .collection("Events")
       .whereEqualTo("eventIsTodo", true)
       .whereGreaterThanOrEqualTo("eventTime", Timestamp(startDate))
@@ -155,7 +155,7 @@ class TodoFragment: Fragment() {
     when (item.itemId) {
       0 -> {
         db.collection("Calendars")
-          .document("A9PHFsmDLUWbaYDdy2XX")
+          .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
           .collection("Events")
           .document(todoItemList[position].eventID)
           .get()
@@ -174,7 +174,7 @@ class TodoFragment: Fragment() {
       1 -> {
         if (auth.currentUser?.uid == todoItemList[position].eventAuthorID) {
           db.collection("Calendars")
-            .document("A9PHFsmDLUWbaYDdy2XX")
+            .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
             .collection("Events")
             .whereEqualTo("eventLinkID", todoItemList[position].eventLinkID)
             .get()

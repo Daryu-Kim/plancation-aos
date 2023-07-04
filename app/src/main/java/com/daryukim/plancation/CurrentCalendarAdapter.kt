@@ -5,42 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DiaryItemAdapter(
-  private val diaryItemList: List<DiaryModel>,
+class CurrentCalendarAdapter(
+  private val calendarItemList: List<CalendarModel>,
 ) :
-  RecyclerView.Adapter<DiaryItemAdapter.DiaryItemViewHolder>() {
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private lateinit var diaryItem: DiaryModel
-  private lateinit var onClickListener: (DiaryModel) -> Unit
+  RecyclerView.Adapter<CurrentCalendarAdapter.DiaryItemViewHolder>() {
+    private lateinit var diaryItem: CalendarModel
+  private lateinit var onClickListener: (CalendarModel) -> Unit
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryItemViewHolder {
     val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_diary, parent, false)
     return DiaryItemViewHolder(itemView)
   }
 
   override fun getItemCount(): Int {
-    return diaryItemList.size
+    return calendarItemList.size
   }
 
   @SuppressLint("ResourceType", "SetTextI18n")
   override fun onBindViewHolder(holder: DiaryItemViewHolder, @SuppressLint("RecyclerView") position: Int) {
-    diaryItem = diaryItemList[position]
+    diaryItem = calendarItemList[position]
 
     checkCalendarUsers(holder, position)
     holder.itemDay.text = SimpleDateFormat("EEE", Locale.US).format(diaryItem.postTime.toDate()).uppercase()
@@ -58,11 +50,11 @@ class DiaryItemAdapter(
     }
 
     holder.itemLayout.setOnClickListener {
-      onClickListener(diaryItemList[position])
+      onClickListener(calendarItemList[position])
     }
   }
 
-  fun setOnClickListener(listener: (DiaryModel) -> Unit) {
+  fun setOnClickListener(listener: (CalendarModel) -> Unit) {
     onClickListener = listener
   }
 
@@ -82,7 +74,7 @@ class DiaryItemAdapter(
 
   private fun getUserName(holder: DiaryItemViewHolder, position: Int) {
     db.collection("Users")
-      .document(diaryItemList[position].postAuthorID)
+      .document(calendarItemList[position].postAuthorID)
       .get()
       .addOnSuccessListener {
         holder.itemUser.text = it.get("userName").toString()

@@ -89,7 +89,7 @@ class DiaryFragment: Fragment() {
     val dataList = mutableListOf<DiaryModel>()
 
     db.collection("Calendars")
-      .document("A9PHFsmDLUWbaYDdy2XX")
+      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
       .collection("Posts")
       .whereGreaterThanOrEqualTo("postTime", Timestamp(startDate))
       .whereLessThan("postTime", Timestamp(endDate))

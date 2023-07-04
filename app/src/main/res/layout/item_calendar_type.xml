@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/diary_item_layout"
+              android:layout_marginBottom="8dp"
+              android:paddingVertical="12dp"
+              android:paddingHorizontal="16dp">
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:id="@+id/side_item_current_calendar_name"
+              android:text="내 캘린더"
+              android:textSize="14sp"
+              android:textColor="@color/text"
+              android:layout_centerVertical="true"
+              android:layout_alignParentStart="true"
+              android:fontFamily="@font/medium"/>
+    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+               android:background="@drawable/ic_person"
+               android:backgroundTint="@color/accent"
+               android:layout_centerVertical="true"
+               android:layout_alignParentEnd="true"
+               android:id="@+id/side_item_current_calendar_type"/>
+
+</RelativeLayout>
