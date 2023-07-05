@@ -1,5 +1,7 @@
 package com.daryukim.plancation
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,12 +12,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.daryukim.plancation.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.dynamiclinks.ktx.*
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var selectedItem = 0
     private var isOpenedCurrentCalendar = false
+    private var isOpenedCurrentCalendarUsers = false
     private var calendarList: ArrayList<CalendarModel> = ArrayList()
+    private var backPressedTime : Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -23,14 +29,53 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         setUpCurrentCalendarListView()
+        setUpCurrentCalendarUsersListView()
 
         binding.appBarSidebarBtn.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
             openCurrentCalendarList(false)
+            openCurrentCalendarUsersList(false)
         }
 
         binding.sideCurrentCalendarLayout.setOnClickListener {
             openCurrentCalendarList(isOpenedCurrentCalendar)
+        }
+
+        binding.sideCreateCalendarLayout.setOnClickListener {
+            val createCalendarBottomSheet = CreateCalendarBottomSheet()
+            createCalendarBottomSheet.setOnFormSubmittedListener { _ ->
+                setUpCurrentCalendarListView()
+                setUpCurrentCalendarUsersListView()
+            }
+            createCalendarBottomSheet.show(supportFragmentManager, "createCalendar")
+        }
+
+        binding.sideInviteCalendarLayout.setOnClickListener {
+            val uniqueId = Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid) // 이 곳에 고유한 식별자가 포함되면 된다.
+            var domainUriPrefix = "https://plancation.page.link" // Firebase Console에서 생성된 접두사
+            var link = "https://plancation.web.app/invite?referrerId=$uniqueId"
+            val dynamicLink = Firebase.dynamicLinks.dynamicLink {
+                this.link = Uri.parse(link)
+                this.domainUriPrefix = domainUriPrefix
+                androidParameters("com.daryukim.plancation") {
+                    fallbackUrl = Uri.parse(getString(R.string.android_app_link))
+                }
+                iosParameters("") {
+                    setFallbackUrl(Uri.parse(getString(R.string.ios_app_link)))
+                }
+            }
+            val inviteLink = dynamicLink.uri.toString()
+
+            val sharingIntent = Intent(Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "App invite")
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Join me on this app using the following invite link: $inviteLink")
+
+            startActivity(Intent.createChooser(sharingIntent, "Share invite link via"))
+        }
+
+        binding.sideCurrentCalendarUsersLayout.setOnClickListener {
+            openCurrentCalendarUsersList(isOpenedCurrentCalendarUsers)
         }
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -49,7 +94,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun openCurrentCalendarUsersList(isOpened: Boolean) {
+        isOpenedCurrentCalendarUsers = !isOpened
+        if (isOpened) {
+            binding.sideCurrentCalendarUserList.visibility = View.VISIBLE
+            binding.sideCurrentCalendarUsersArrow.background = ContextCompat.getDrawable(this, R.drawable.ic_down)
+        } else {
+            binding.sideCurrentCalendarUserList.visibility = View.GONE
+            binding.sideCurrentCalendarUsersArrow.background = ContextCompat.getDrawable(this, R.drawable.ic_right)
+        }
+    }
+
     private fun setUpCurrentCalendarListView() {
+        calendarList.clear()
         Application.db.collection("Calendars")
             .whereArrayContains("calendarUsers", Application.auth.currentUser!!.uid)
             .get()
@@ -72,6 +129,21 @@ class MainActivity : AppCompatActivity() {
                 binding.sideCurrentCalendarList.apply {
                     layoutManager = LinearLayoutManager(this@MainActivity)
                     adapter = currentCalendarAdapter
+                }
+            }
+    }
+
+    private fun setUpCurrentCalendarUsersListView() {
+        Application.db.collection("Calendars")
+            .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
+            .get()
+            .addOnSuccessListener { calendar ->
+                val userList = calendar.data!!["calendarUsers"] as ArrayList<String>
+                Toast.makeText(this, userList.toString(), Toast.LENGTH_SHORT).show()
+                val currentCalendarUsersAdapter = CurrentCalendarUsersAdapter(userList)
+                binding.sideCurrentCalendarUserList.apply {
+                    layoutManager = LinearLayoutManager(this@MainActivity)
+                    adapter = currentCalendarUsersAdapter
                 }
             }
     }
@@ -116,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 if (it.data != null) {
-                    binding.appBarTitle.text = it.data!!.get("calendarTitle").toString()
+                    binding.appBarTitle.text = it.data!!["calendarTitle"].toString()
                 }
             }
     }
@@ -126,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_layout, fragment).commit()
         fragmentTransaction.addToBackStack(null)
+        selectedItem = 0
     }
 
     private fun refreshFragment(selectedFragment: Fragment) {
@@ -133,5 +206,16 @@ class MainActivity : AppCompatActivity() {
             .detach(selectedFragment)
             .attach(selectedFragment)
             .commit()
+        selectedItem = 0
+    }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - backPressedTime < 2000) {
+            finish()
+            return
+        }
+
+        Toast.makeText(this, "한번 더 뒤로가기 하시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+        backPressedTime = System.currentTimeMillis()
     }
 }

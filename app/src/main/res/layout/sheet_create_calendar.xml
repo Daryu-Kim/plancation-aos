@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        android:id="@+id/diary_date_form_layout"
+        android:id="@+id/create_calendar"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:background="@drawable/form_shape"
             android:paddingHorizontal="32dp"
-            android:id="@+id/diary_date_form_bar_layout"
+            android:id="@+id/create_calendar_bar_layout"
             android:paddingVertical="16dp">
         <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/user_selector_form_bar_cancel_button"
+                android:id="@+id/create_calendar_bar_cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -29,8 +29,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:id="@+id/diary_date_form_bar_title"
-                  android:text="조회 년/월 선택"
+                  android:id="@+id/create_calendar_bar_title"
+                  android:text="새로운 캘린더"
                   app:layout_constraintTop_toTopOf="parent"
                   app:layout_constraintBottom_toBottomOf="parent"
                   app:layout_constraintStart_toStartOf="parent"
@@ -39,11 +39,11 @@
                   android:textSize="16sp"
                   android:fontFamily="@font/bold"/>
         <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/diary_date_form_bar_submit_button"
+                android:id="@+id/create_calendar_bar_submit_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="완료"
+                android:text="생성"
                 android:textSize="14sp"
                 android:textColor="@color/white"
                 android:minWidth="0dp"
@@ -53,30 +53,24 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
     <LinearLayout
-            android:id="@+id/diary_date_picker_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
-            android:paddingVertical="16dp"
-            android:paddingHorizontal="24dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-        <NumberPicker
-                android:id="@+id/diary_date_picker_year"
-                android:layout_width="wrap_content"
-                android:theme="@style/NumberPickerTheme"
-                android:layout_height="wrap_content"/>
-
-        <NumberPicker
-                android:id="@+id/diary_date_picker_month"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:theme="@style/NumberPickerTheme"
-                android:layout_height="wrap_content"/>
-
+            android:orientation="vertical"
+            android:paddingHorizontal="32dp"
+            android:paddingVertical="16dp">
+        <EditText
+                android:id="@+id/create_calendar_content_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent"
+                android:paddingBottom="16dp"
+                android:hint="캘린더 이름"
+                android:fontFamily="@font/bold"
+                android:textSize="16sp"
+                android:textColor="@color/text"
+                android:textColorHint="@color/hint_text"
+                android:paddingHorizontal="8dp" />
     </LinearLayout>
-
 </LinearLayout>

@@ -62,4 +62,6 @@
         <item name="android:timePickerMode">spinner</item>
     </style>
 
+    <style name="NumberPickerTheme" parent="android:ThemeOverlay.Material.Light"></style>
+
 </resources>

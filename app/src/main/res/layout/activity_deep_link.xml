@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".MainActivity">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/inverse_primary"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp"
+            android:layout_alignParentTop="true"
+            android:id="@+id/app_bar_layout">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="캘린더 초대"
+                  android:layout_centerInParent="true"
+                  android:background="@color/inverse_primary"
+                  android:id="@+id/app_bar_title"
+                  android:fontFamily="@font/bold"
+                  android:textColor="@color/white"
+                  android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/app_bar_layout"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp"
+            android:id="@+id/deep_link_layout">
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="OOO 캘린더에서\n당신을 초대합니다!"
+                  android:textSize="22sp"
+                  android:gravity="center"
+                  android:textColor="@color/text"
+                  android:fontFamily="@font/bold"
+                  android:id="@+id/deep_link_title"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="안녕하세요 [수신자 이름]님!"
+                  android:textSize="16sp"
+                  android:id="@+id/deep_link_name"
+                  android:textColor="@color/text"
+                  android:fontFamily="@font/medium"
+                  android:layout_marginTop="36dp"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="계획 세우기에 어려움을 겪고 있을 당신을 위해 [행사 이름]에 초대하고자 이 메시지를 전달 드립니다."
+                  android:textSize="16sp"
+                  android:id="@+id/deep_link_calendar"
+                  android:textColor="@color/text"
+                  android:fontFamily="@font/medium"
+                  android:layout_marginTop="16dp"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="이번 캘린더에서는 서로의 일정을 조율하고 다양한 경험을 공유하며 즐거운 추억을 만들어보고자 합니다."
+                  android:textSize="16sp"
+                  android:textColor="@color/text"
+                  android:fontFamily="@font/medium"
+                  android:layout_marginTop="16dp"/>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:text="많은 분들과 함께하기를 기대합니다!"
+                  android:textSize="16sp"
+                  android:textColor="@color/text"
+                  android:fontFamily="@font/medium"
+                  android:layout_marginTop="16dp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="캘린더 관리자 [발신자 이름] 드림"
+                  android:fontFamily="@font/bold"
+                  android:id="@+id/deep_link_author"
+                  android:layout_marginTop="36dp"
+                  android:textColor="@color/text"
+                  android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginVertical="16dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatButton android:layout_width="0dp" android:layout_height="wrap_content"
+                                                   android:layout_weight="1"
+                                                   android:background="@drawable/outline_button_shape"
+                                                   android:text="거절"
+                                                   android:id="@+id/deep_link_cancel"
+                                                   android:textColor="@color/error"
+                                                   android:textSize="18sp"
+                                                   android:fontFamily="@font/bold"/>
+        />
+
+        <androidx.appcompat.widget.AppCompatButton android:layout_width="0dp" android:layout_height="wrap_content"
+                                                   android:layout_weight="1"
+                                                   android:background="@drawable/solid_button_shape"
+                                                   android:text="승인"
+                                                   android:id="@+id/deep_link_submit"
+                                                   android:textColor="@color/inverse_text"
+                                                   android:textSize="18sp"
+                                                   android:fontFamily="@font/bold"
+        android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

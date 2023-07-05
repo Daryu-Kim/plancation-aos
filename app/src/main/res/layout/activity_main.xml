@@ -130,7 +130,7 @@
             <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                             android:paddingVertical="8dp"
                             android:id="@+id/side_current_calendar_layout"
-                            android:layout_marginTop="16dp">
+                            android:layout_marginTop="36dp">
                 <ImageView android:layout_width="16dp" android:layout_height="16dp"
                            android:background="@drawable/ic_right"
                            android:backgroundTint="@color/primary"
@@ -156,6 +156,7 @@
 
             <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
+                                                       android:layout_marginTop="12dp"
                                                        android:id="@+id/side_current_calendar_list"
                                                        android:visibility="gone"/>
 
@@ -218,6 +219,7 @@
 
             <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
+                                                       android:layout_marginTop="12dp"
                                                        android:id="@+id/side_current_calendar_user_list"
                                                        android:visibility="gone"/>
 

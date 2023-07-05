@@ -33,6 +33,21 @@
         <activity android:name=".FindPWActivity" android:exported="true"/>
         <activity android:name=".DiaryActivity" android:exported="true"/>
         <activity android:name=".DiaryFormActivity" android:exported="true"/>
+        <activity
+                android:name=".DeepLinkActivity"
+                android:label="캘린더 초대 링크"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                        android:scheme="https"
+                        android:host="plancation.web.app"
+                        android:path="/invite" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

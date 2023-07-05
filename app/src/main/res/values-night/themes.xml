@@ -36,4 +36,6 @@
     <style name="TimePickerTheme" parent="android:ThemeOverlay.Material.Dark">
         <item name="android:datePickerStyle">@style/TimePickerStyle</item>
     </style>
+
+    <style name="NumberPickerTheme" parent="android:ThemeOverlay.Material.Dark"></style>
 </resources>
