@@ -131,7 +131,7 @@
                             android:paddingVertical="8dp"
                             android:id="@+id/side_current_calendar_layout"
                             android:layout_marginTop="16dp">
-                <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                <ImageView android:layout_width="16dp" android:layout_height="16dp"
                            android:background="@drawable/ic_right"
                            android:backgroundTint="@color/primary"
                            android:id="@+id/side_current_calendar_arrow"
@@ -157,6 +157,68 @@
             <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
                                                        android:id="@+id/side_current_calendar_list"
+                                                       android:visibility="gone"/>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:id="@+id/side_create_calendar_layout"
+                            android:layout_marginTop="16dp">
+                <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                           android:background="@drawable/ic_right"
+                           android:backgroundTint="@color/primary"
+                           android:id="@+id/side_create_calendar_arrow"
+                           android:layout_centerVertical="true"
+                           android:layout_alignParentStart="true"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="새로운 캘린더 만들기"
+                          android:textSize="12sp"
+                          android:layout_marginStart="8dp"
+                          android:fontFamily="@font/medium"
+                          android:layout_toEndOf="@id/side_create_calendar_arrow"
+                          android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:id="@+id/side_invite_calendar_layout"
+                            android:layout_marginTop="16dp">
+                <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                           android:background="@drawable/ic_right"
+                           android:backgroundTint="@color/primary"
+                           android:id="@+id/side_invite_calendar_arrow"
+                           android:layout_centerVertical="true"
+                           android:layout_alignParentStart="true"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="현재 캘린더에 유저 초대"
+                          android:textSize="12sp"
+                          android:layout_marginStart="8dp"
+                          android:fontFamily="@font/medium"
+                          android:layout_toEndOf="@id/side_invite_calendar_arrow"
+                          android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:id="@+id/side_current_calendar_users_layout"
+                            android:layout_marginTop="16dp">
+                <ImageView android:layout_width="16dp" android:layout_height="16dp"
+                           android:background="@drawable/ic_right"
+                           android:backgroundTint="@color/primary"
+                           android:id="@+id/side_current_calendar_users_arrow"
+                           android:layout_centerVertical="true"
+                           android:layout_alignParentStart="true"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="현재 캘린더 참여자 목록"
+                          android:textSize="12sp"
+                          android:layout_marginStart="8dp"
+                          android:fontFamily="@font/medium"
+                          android:layout_toEndOf="@id/side_current_calendar_users_arrow"
+                          android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
+                                                       android:id="@+id/side_current_calendar_user_list"
                                                        android:visibility="gone"/>
 
 

@@ -3,6 +3,7 @@ package com.daryukim.plancation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.appBarSidebarBtn.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
+            openCurrentCalendarList(false)
         }
 
         binding.sideCurrentCalendarLayout.setOnClickListener {
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         loadFragment(CalendarFragment())
+        setCalendarTitle()
     }
 
     private fun openCurrentCalendarList(isOpened: Boolean) {
@@ -47,14 +50,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpCurrentCalendarListView() {
-        val currentCalendarAdapter = CurrentCalendarAdapter(calendarList)
-        currentCalendarAdapter.setOnClickListener { calendarModel ->
-            Application.prefs.setString("currentCalendar", calendarModel.calendarID)
-        }
-        binding.sideCurrentCalendarList.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = currentCalendarAdapter
-        }
+        Application.db.collection("Calendars")
+            .whereArrayContains("calendarUsers", Application.auth.currentUser!!.uid)
+            .get()
+            .addOnSuccessListener { calendars ->
+                for (calendar in calendars) {
+                    calendarList.add(CalendarModel.fromDocument(calendar.data))
+                    if (calendar.data.get("calendarID").toString() == Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid)) {
+                        binding.sideCurrentCalendarName.text = calendar.data.get("calendarTitle").toString()
+                    }
+                }
+                val currentCalendarAdapter = CurrentCalendarAdapter(calendarList)
+                currentCalendarAdapter.setOnClickListener { calendarModel ->
+                    Application.prefs.setString("currentCalendar", calendarModel.calendarID)
+                    Toast.makeText(this, "${calendarModel.calendarTitle} 캘린더로 변경되었습니다!", Toast.LENGTH_SHORT).show()
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    binding.bottomNavigation.selectedItemId = R.id.nav_calendar
+                    binding.appBarTitle.text = calendarModel.calendarTitle
+                    binding.sideCurrentCalendarName.text = calendarModel.calendarTitle
+                }
+                binding.sideCurrentCalendarList.apply {
+                    layoutManager = LinearLayoutManager(this@MainActivity)
+                    adapter = currentCalendarAdapter
+                }
+            }
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -74,9 +93,32 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_my -> "내 계정"
                 else -> "캘린더"
             }
+            if (selectedItem == R.id.nav_calendar) {
+                setCalendarTitle()
+            }
             loadFragment(selectedFragment)
+        } else {
+            val selectedFragment: Fragment = when (selectedItem) {
+                R.id.nav_calendar -> CalendarFragment()
+                R.id.nav_todo -> TodoFragment()
+                R.id.nav_diary -> DiaryFragment()
+                R.id.nav_my -> MyPageFragment()
+                else -> CalendarFragment()
+            }
+            refreshFragment(selectedFragment)
         }
         true
+    }
+
+    private fun setCalendarTitle() {
+        Application.db.collection("Calendars")
+            .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
+            .get()
+            .addOnSuccessListener {
+                if (it.data != null) {
+                    binding.appBarTitle.text = it.data!!.get("calendarTitle").toString()
+                }
+            }
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -84,5 +126,12 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragment_layout, fragment).commit()
         fragmentTransaction.addToBackStack(null)
+    }
+
+    private fun refreshFragment(selectedFragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .detach(selectedFragment)
+            .attach(selectedFragment)
+            .commit()
     }
 }

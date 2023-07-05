@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.daryukim.plancation.databinding.ActivityDiaryBinding
@@ -33,7 +35,13 @@ class DiaryFormActivity : AppCompatActivity() {
   private var data: DiaryModel? = null
 
   private val pickImagesLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-    uri?.let { imageUri = uri  }
+    uri?.let {
+      imageUri = uri
+      Glide.with(this)
+        .load(uri)
+        .transform(CenterCrop(), RoundedCorners(12))
+        .into(binding.diaryFormImage)
+    }
   }
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -49,6 +57,7 @@ class DiaryFormActivity : AppCompatActivity() {
     }
     binding.appBarCancel.setOnClickListener { finish() }
     binding.appBarSubmit.setOnClickListener {
+      binding.diaryFormProgress.visibility = View.VISIBLE
       if (!isModify) data = data!!.copy(postID = UUID.randomUUID().toString(), postTime = Timestamp.now())
       data = data!!.copy(
         postTitle = binding.diaryFormTitle.text.toString(),
@@ -56,10 +65,7 @@ class DiaryFormActivity : AppCompatActivity() {
         postAuthorID = auth.currentUser?.uid.toString(),
       )
 
-      CoroutineScope(Dispatchers.Main).launch {
-        uploadImageToFirebaseStorage(imageUri)
-        setFirestoreData(isModify)
-      }
+        uploadImageToFirebaseStorage(isModify, imageUri)
     }
 
     if (data != null) {
@@ -70,6 +76,7 @@ class DiaryFormActivity : AppCompatActivity() {
       binding.diaryFormContent.setText(data!!.postContent)
       Glide.with(this)
         .load(data!!.postImage)
+        .transform(CenterCrop(), RoundedCorners(12))
         .into(binding.diaryFormImage)
     } else {
       binding.appBarSubmit.text = "등록"
@@ -78,51 +85,52 @@ class DiaryFormActivity : AppCompatActivity() {
     }
   }
 
-  private fun setFirestoreData(isModify: Boolean) {
-    db.collection("Calendars")
-      .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
-      .collection("Posts")
-      .document(data!!.postID)
-      .set(data!!)
-      .addOnSuccessListener {
-        Toast.makeText(
-          this,
-          if (isModify) "게시물이 수정되었습니다!" else "게시물이 등록되었습니다!",
-          Toast.LENGTH_SHORT
-        ).show()
-        finish()
-      }
-  }
-
-  private fun uploadImageToFirebaseStorage(uri: Uri?) {
+  private fun uploadImageToFirebaseStorage(isModify: Boolean, uri: Uri?) {
     if (uri != null) {
       val storageReference = FirebaseStorage.getInstance().reference
       val imageRef = storageReference.child("Posts/${data!!.postID}/post_image.png")
-
-      // 이미지를 Firebase Storage에 업로드
       imageRef.putFile(uri)
         .addOnSuccessListener { uploadTask ->
-          // 업로드 되었기 때문에, 이미지의 다운로드 URL을 얻어 Firestore에 저장
           imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-            updateFirestoreWithImageUrl(downloadUri.toString())
+            db.collection("Users")
+              .document(auth.currentUser?.uid.toString())
+              .update("userImagePath", downloadUri.toString())
+              .addOnSuccessListener {
+                data = data!!.copy(postImage = downloadUri.toString())
+                db.collection("Calendars")
+                  .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
+                  .collection("Posts")
+                  .document(data!!.postID)
+                  .set(data!!)
+                  .addOnSuccessListener {
+                    Toast.makeText(
+                      this,
+                      if (isModify) "게시물이 수정되었습니다!" else "게시물이 등록되었습니다!",
+                      Toast.LENGTH_SHORT
+                    ).show()
+                    binding.diaryFormProgress.visibility = View.GONE
+                    finish()
+                  }
+              }
           }
         }
-        .addOnFailureListener { exception ->
-          // 업로드 실패시 처리
-        }
+        .addOnFailureListener { exception -> }
     } else {
-      return
+      db.collection("Calendars")
+        .document(Application.prefs.getString("currentCalendar", auth.currentUser!!.uid))
+        .collection("Posts")
+        .document(data!!.postID)
+        .set(data!!)
+        .addOnSuccessListener {
+          Toast.makeText(
+            this,
+            if (isModify) "게시물이 수정되었습니다!" else "게시물이 등록되었습니다!",
+            Toast.LENGTH_SHORT
+          ).show()
+          binding.diaryFormProgress.visibility = View.GONE
+          finish()
+        }
     }
 
-  }
-
-  private fun updateFirestoreWithImageUrl(imageUrl: String) {
-    // "userImagePath" 필드에 이미지 URL을 저장한다.
-    db.collection("Users")
-      .document(auth.currentUser?.uid.toString())
-      .update("userImagePath", imageUrl)
-      .addOnSuccessListener {
-        data = data!!.copy(postImage = imageUrl)
-      }
   }
 }
