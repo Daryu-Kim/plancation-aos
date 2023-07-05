@@ -60,18 +60,19 @@ class MainActivity : AppCompatActivity() {
                 androidParameters("com.daryukim.plancation") {
                     fallbackUrl = Uri.parse(getString(R.string.android_app_link))
                 }
-                iosParameters("") {
+                iosParameters("com.daryukim.plancation") {
                     setFallbackUrl(Uri.parse(getString(R.string.ios_app_link)))
                 }
             }
+
             val inviteLink = dynamicLink.uri.toString()
 
             val sharingIntent = Intent(Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
-            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "App invite")
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Join me on this app using the following invite link: $inviteLink")
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "App & Calendar invite")
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "당신을 Plancation의 '${binding.appBarTitle.text}' 캘린더로 초대합니다! 링크를 클릭하여 초대를 승인해주세요!: $inviteLink")
 
-            startActivity(Intent.createChooser(sharingIntent, "Share invite link via"))
+            startActivity(Intent.createChooser(sharingIntent, "App & Calendar Invite"))
         }
 
         binding.sideCurrentCalendarUsersLayout.setOnClickListener {
