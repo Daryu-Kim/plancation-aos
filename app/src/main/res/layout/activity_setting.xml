@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/background"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/inverse_primary"
+            android:paddingVertical="16dp"
+            android:paddingHorizontal="24dp"
+            android:layout_alignParentTop="true"
+            android:id="@+id/app_bar_layout">
+
+        <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                     android:background="@drawable/ic_prev"
+                     android:layout_centerVertical="true"
+                     android:id="@+id/app_bar_prev"
+                     android:backgroundTint="@color/white"
+                     android:layout_alignParentStart="true"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:text="설정"
+                  android:background="@color/inverse_primary"
+                  android:id="@+id/app_bar_title"
+                  android:fontFamily="@font/bold"
+                  android:textColor="@color/white"
+                  android:textSize="18sp" android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/app_bar_layout"
+            >
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/setting_layout">
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:id="@+id/setting_alert_btn"
+                            android:paddingVertical="16dp"
+                            android:paddingHorizontal="24dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="알림 설정"
+                          android:textSize="16sp"
+                          android:textColor="@color/primary"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentStart="true"
+                          android:fontFamily="@font/bold"/>
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:layout_centerVertical="true"
+                              android:gravity="center_vertical"
+                              android:layout_alignParentEnd="true"
+                              android:orientation="horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:text="09:00"
+                              android:textSize="16sp"
+                              android:textColor="@color/accent"
+                              android:fontFamily="@font/medium"
+                              android:id="@+id/setting_alert_time"/>
+                    <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                                 android:background="@drawable/ic_right"
+                               android:id="@+id/setting_alert_time_dropdown"
+                                 android:backgroundTint="@color/accent"
+                                 android:layout_marginStart="8dp"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                       android:background="@color/divider"/>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:visibility="gone"
+                          android:id="@+id/setting_alert_time_picker">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="Set Time"
+                          android:textColor="@color/text"
+                          android:paddingTop="16dp"
+                          android:paddingHorizontal="24dp"
+                          android:fontFamily="@font/bold"
+                          android:textSize="18sp"/>
+                <TimePicker android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:theme="@style/TimePickerTheme"
+                            android:id="@+id/setting_alert_time_picker_widget"
+                            android:paddingHorizontal="24dp"
+                            android:timePickerMode="spinner"/>
+                <LinearLayout android:layout_width="match_parent"
+                              android:paddingBottom="16dp"
+                              android:paddingHorizontal="24dp" android:layout_height="wrap_content"
+                              android:orientation="horizontal">
+                    <androidx.appcompat.widget.AppCompatButton android:layout_width="0dp"
+                                                               android:id="@+id/setting_alert_time_picker_cancel"
+                                                               android:layout_height="wrap_content"
+                                                               android:layout_weight="1"
+                                                               android:background="@drawable/outline_button_shape"
+                                                               android:text="취소"
+                                                               android:textColor="@color/primary"
+                                                               android:textSize="16sp"
+                                                               android:fontFamily="@font/bold"/>
+                    <androidx.appcompat.widget.AppCompatButton android:layout_width="0dp"
+                                                               android:layout_height="wrap_content"
+                                                               android:layout_weight="1"
+                                                               android:id="@+id/setting_alert_time_picker_submit"
+                                                               android:background="@drawable/solid_button_shape"
+                                                               android:text="저장"
+                                                               android:layout_marginStart="16dp"
+                                                               android:textColor="@color/white"
+                                                               android:textSize="16sp"
+                                                               android:fontFamily="@font/bold"/>
+                </LinearLayout>
+
+                <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                           android:background="@color/divider"/>
+
+            </LinearLayout>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:id="@+id/setting_change_pw_btn"
+                            android:paddingVertical="16dp"
+                            android:paddingHorizontal="24dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="비밀번호 변경"
+                          android:textSize="16sp"
+                          android:textColor="@color/primary"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentStart="true"
+                          android:fontFamily="@font/bold"/>
+            </RelativeLayout>
+
+            <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                       android:background="@color/divider"/>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:id="@+id/setting_delete_calendar_btn"
+                            android:paddingVertical="16dp"
+                            android:paddingHorizontal="24dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="캘린더 삭제"
+                          android:textSize="16sp"
+                          android:textColor="@color/primary"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentStart="true"
+                          android:fontFamily="@font/bold"/>
+                <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                           android:background="@drawable/ic_right"
+                           android:id="@+id/setting_delete_calendar_dropdown"
+                           android:backgroundTint="@color/accent"
+                           android:layout_centerVertical="true"
+                           android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+
+            <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                       android:background="@color/divider"/>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:visibility="gone"
+                          android:id="@+id/setting_delete_calendar_picker">
+
+                <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                           android:layout_height="wrap_content"
+                                                           android:id="@+id/setting_delete_calendar_list"
+                                                           android:paddingVertical="16dp"
+                                                           android:paddingHorizontal="24dp"/>
+
+                <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                           android:background="@color/divider"/>
+
+            </LinearLayout>
+
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:id="@+id/setting_delete_account_btn"
+                            android:paddingVertical="16dp"
+                            android:paddingHorizontal="24dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="계정 삭제"
+                          android:textSize="16sp"
+                          android:textColor="@color/error"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentStart="true"
+                          android:fontFamily="@font/bold"/>
+            </RelativeLayout>
+
+            <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                       android:background="@color/divider"/>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:id="@+id/setting_version_btn"
+                            android:paddingVertical="16dp"
+                            android:paddingHorizontal="24dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="버전 정보"
+                          android:textSize="16sp"
+                          android:textColor="@color/hint_text"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentStart="true"
+                          android:fontFamily="@font/bold"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="V 23.06"
+                          android:textSize="16sp"
+                          android:textColor="@color/hint_text"
+                          android:layout_centerVertical="true"
+                          android:layout_alignParentEnd="true"
+                          android:fontFamily="@font/bold"/>
+            </RelativeLayout>
+
+            <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                       android:background="@color/divider"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -14,6 +14,7 @@
             android:background="@color/inverse_primary"
             android:paddingVertical="16dp"
             android:paddingHorizontal="24dp"
+            android:layout_alignParentTop="true"
             android:id="@+id/app_bar_layout">
 
         <ImageButton android:layout_width="28dp" android:layout_height="28dp"
@@ -48,55 +49,187 @@
 
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_below="@id/app_bar_layout"
+            android:layout_above="@id/ai_form_submit"
             android:paddingVertical="16dp"
             android:paddingHorizontal="24dp"
-            android:id="@+id/ai_form_layout">
+            >
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="계획 날짜"
-                  android:textSize="14sp"
-                  android:textColor="@color/inverse_primary"
-                  android:fontFamily="@font/bold"/>
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:layout_marginTop="16dp"
-                      android:background="@drawable/form_edittext">
-            <RelativeLayout android:layout_width="0dp" android:layout_height="48dp"
-                            android:layout_weight="1">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/ai_form_layout">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical">
+
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:text="YYYY.MM.DD"
-                          android:layout_centerInParent="true"
-                          android:textColor="@color/hint_text"
-                          android:fontFamily="@font/bold"
-                          android:textSize="14sp"/>
-            </RelativeLayout>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="~"
-                      android:textColor="@color/text"
-                      android:fontFamily="@font/bold"
-                      android:textSize="16sp"
-                      android:layout_gravity="center_vertical"/>
-            <RelativeLayout android:layout_width="0dp" android:layout_height="48dp"
-                            android:layout_weight="1">
+                          android:text="계획 날짜"
+                          android:textSize="14sp"
+                          android:textColor="@color/primary"
+                          android:fontFamily="@font/bold"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:layout_marginTop="16dp"
+                              android:background="@drawable/form_edittext">
+                    <RelativeLayout android:layout_width="0dp" android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:id="@+id/ai_form_date_start">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                  android:text="YYYY.MM.DD"
+                                  android:id="@+id/ai_form_date_start_text"
+                                  android:layout_centerInParent="true"
+                                  android:textColor="@color/hint_text"
+                                  android:fontFamily="@font/bold"
+                                  android:textSize="14sp"/>
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:text="~"
+                              android:textColor="@color/text"
+                              android:fontFamily="@font/bold"
+                              android:textSize="16sp"
+                              android:layout_gravity="center_vertical"/>
+                    <RelativeLayout android:layout_width="0dp" android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:id="@+id/ai_form_date_end">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                  android:text="YYYY.MM.DD"
+                                  android:id="@+id/ai_form_date_end_text"
+                                  android:layout_centerInParent="true"
+                                  android:textColor="@color/hint_text"
+                                  android:fontFamily="@font/bold"
+                                  android:textSize="14sp"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <DatePicker
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:padding="0dp"
+                        android:visibility="gone"
+                        android:id="@+id/ai_form_date_picker"
+                        android:layout_marginTop="16dp"
+                        android:calendarTextColor="@color/text"
+                        android:theme="@style/DatePickerTheme"
+                        android:background="@drawable/form_edittext"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:text="YYYY.MM.DD"
-                          android:layout_centerInParent="true"
+                          android:text="계획의 시작과 종료 날짜를 입력해 주세요."
+                          android:textSize="12sp"
+                          android:id="@+id/ai_form_date_text"
                           android:textColor="@color/hint_text"
-                          android:fontFamily="@font/bold"
-                          android:textSize="14sp"/>
-            </RelativeLayout>
+                          android:fontFamily="@font/medium"
+                          android:layout_marginTop="12dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginTop="24dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="활동 시간"
+                          android:textSize="14sp"
+                          android:textColor="@color/primary"
+                          android:fontFamily="@font/bold"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:layout_marginTop="16dp"
+                              android:background="@drawable/form_edittext">
+                    <RelativeLayout android:layout_width="0dp" android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:id="@+id/ai_form_time_start">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                  android:text="AM 00:00"
+                                  android:id="@+id/ai_form_time_start_text"
+                                  android:layout_centerInParent="true"
+                                  android:textColor="@color/hint_text"
+                                  android:fontFamily="@font/bold"
+                                  android:textSize="14sp"/>
+                    </RelativeLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:text="~"
+                              android:textColor="@color/text"
+                              android:fontFamily="@font/bold"
+                              android:textSize="16sp"
+                              android:layout_gravity="center_vertical"/>
+                    <RelativeLayout android:layout_width="0dp" android:layout_height="48dp"
+                                    android:layout_weight="1"
+                                    android:id="@+id/ai_form_time_end">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                  android:text="AM 00:00"
+                                  android:id="@+id/ai_form_time_end_text"
+                                  android:layout_centerInParent="true"
+                                  android:textColor="@color/hint_text"
+                                  android:fontFamily="@font/bold"
+                                  android:textSize="14sp"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <TimePicker
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:padding="0dp"
+                        android:visibility="gone"
+                        android:id="@+id/ai_form_time_picker"
+                        android:layout_marginTop="16dp"
+                        android:calendarTextColor="@color/text"
+                        android:timePickerMode="spinner"
+                        android:theme="@style/TimePickerTheme"
+                        android:background="@drawable/form_edittext"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="활동 시작 및 종료 시간을 입력해주세요."
+                          android:textSize="12sp"
+                          android:textColor="@color/hint_text"
+                          android:fontFamily="@font/medium"
+                          android:layout_marginTop="12dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginTop="24dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="계획 주제"
+                          android:textSize="14sp"
+                          android:textColor="@color/primary"
+                          android:fontFamily="@font/bold"/>
+                <EditText android:layout_width="match_parent" android:layout_height="48dp"
+                          android:background="@drawable/form_edittext"
+                          android:hint="Ex) 제주도 여행, 개발 일정, 발표 준비 등"
+                          android:textSize="14sp"
+                          android:textColor="@color/text"
+                          android:id="@+id/ai_form_prompt"
+                          android:textColorHint="@color/hint_text"
+                          android:fontFamily="@font/medium"
+                          android:maxLines="1"
+                          android:paddingHorizontal="16dp"
+                          android:layout_marginTop="16dp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:text="어떤 것을 계획 중이세요?"
+                          android:textSize="12sp"
+                          android:id="@+id/ai_form_prompt_text"
+                          android:textColor="@color/hint_text"
+                          android:fontFamily="@font/medium"
+                          android:layout_marginTop="12dp"/>
+
+            </LinearLayout>
         </LinearLayout>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="계획의 시작과 종료 날짜를 입력해 주세요."
-                  android:textSize="12sp"
-                  android:textColor="@color/hint_text"
-                  android:fontFamily="@font/medium"
-                  android:layout_marginTop="12dp"/>
-    </LinearLayout>
+
+    </ScrollView>
 
 
-</LinearLayout>
+    <androidx.appcompat.widget.AppCompatButton android:layout_width="match_parent" android:layout_height="wrap_content"
+                                               android:layout_alignParentBottom="true"
+                                               android:background="@drawable/solid_button_shape"
+                                               android:text="결과 보기"
+                                               android:id="@+id/ai_form_submit"
+                                               android:textSize="16sp"
+                                               android:textColor="@color/inverse_text"
+                                               android:fontFamily="@font/bold"
+                                               android:layout_marginVertical="16dp"
+                                               android:layout_marginHorizontal="24dp"/>
+
+</RelativeLayout>

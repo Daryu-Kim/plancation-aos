@@ -6,4 +6,5 @@
     <string name="address_not_found">유효한 주소를 입력해주세요!</string>
     <string name="android_app_link">https://play.google.com/store/apps/details?id=com.daryukim.plancation</string>
     <string name="ios_app_link">https://itunes.apple.com/app/id1450494816</string>
+    <string name="openai_api_key">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</string>
 </resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:id="@+id/color_picker_form_layout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/transparent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:background="@drawable/form_shape"
+            android:paddingHorizontal="32dp"
+            android:id="@+id/sheet_bar_layout"
+            android:paddingVertical="16dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/sheet_bar_title"
+                  android:text="계정을 정말 탈퇴하시겠어요?\n데이터는 보존되지 않습니다."
+                  android:layout_centerInParent="true"
+                  android:textColor="@color/white"
+                  android:textSize="16sp"
+                  android:fontFamily="@font/bold"/>
+    </RelativeLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:gravity="center"
+            android:orientation="vertical">
+        <androidx.appcompat.widget.AppCompatButton android:layout_width="match_parent"
+                                                   android:layout_height="72dp"
+                                                   android:text="취소"
+                                                   android:textSize="20sp"
+                                                   android:id="@+id/sheet_cancel_btn"
+                                                   android:background="@android:color/transparent"
+                                                   android:textColor="@color/primary"
+                                                   android:fontFamily="@font/bold"/>
+        <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+                   android:background="@color/divider"/>
+        <androidx.appcompat.widget.AppCompatButton android:layout_width="match_parent"
+                                                   android:layout_height="72dp"
+                                                   android:text="탈퇴"
+                                                   android:textSize="20sp"
+                                                   android:id="@+id/sheet_delete_btn"
+                                                   android:background="@android:color/transparent"
+                                                   android:textColor="@color/error"
+                                                   android:fontFamily="@font/bold"/>
+    </LinearLayout>
+
+</LinearLayout>

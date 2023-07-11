@@ -33,6 +33,10 @@
         <activity android:name=".FindPWActivity" android:exported="true"/>
         <activity android:name=".DiaryActivity" android:exported="true"/>
         <activity android:name=".DiaryFormActivity" android:exported="true"/>
+        <activity android:name=".AIFormActivity" android:exported="true"/>
+        <activity android:name=".AIResultActivity" android:exported="true"/>
+        <activity android:name=".SettingActivity" android:exported="true"/>
+        <activity android:name=".ChangePWActivity" android:exported="true"/>
         <activity
                 android:name=".DeepLinkActivity"
                 android:label="캘린더 초대 링크"

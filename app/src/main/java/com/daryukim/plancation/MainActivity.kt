@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
             openCurrentCalendarUsersList(false)
         }
 
+        binding.sideSettingBtn.setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
+        }
+
         binding.sideCurrentCalendarLayout.setOnClickListener {
             openCurrentCalendarList(isOpenedCurrentCalendar)
         }
@@ -155,6 +159,7 @@ class MainActivity : AppCompatActivity() {
             val selectedFragment: Fragment = when (selectedItem) {
                 R.id.nav_calendar -> CalendarFragment()
                 R.id.nav_todo -> TodoFragment()
+                R.id.nav_ai -> AIFragment()
                 R.id.nav_diary -> DiaryFragment()
                 R.id.nav_my -> MyPageFragment()
                 else -> CalendarFragment()
@@ -162,6 +167,7 @@ class MainActivity : AppCompatActivity() {
             binding.appBarTitle.text = when (selectedItem) {
                 R.id.nav_calendar -> "캘린더"
                 R.id.nav_todo -> "할 일 목록"
+                R.id.nav_ai -> "AI 스케줄링"
                 R.id.nav_diary -> "기록"
                 R.id.nav_my -> "내 계정"
                 else -> "캘린더"

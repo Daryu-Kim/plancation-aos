@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.google.firebase.auth.FirebaseAuth
+import java.time.LocalTime
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -22,6 +23,12 @@ class SplashActivity : AppCompatActivity() {
     setContentView(R.layout.activity_splash)
 
     Handler(Looper.getMainLooper()).postDelayed({
+      if (Application.prefs.getBoolean("isFirstRunKey", true)) {
+        val time: LocalTime = LocalTime.of(9,0)
+        Application.prefs.setBoolean("isFirstRunKey", false)
+        Application.prefs.setString("alertTime", time.toString())
+      }
+
       if (isUserLoggedIn()) {
         startActivity(Intent(this, MainActivity::class.java))
       } else {
