@@ -14,6 +14,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -164,10 +165,15 @@ class CalendarFragment: Fragment() {
       .whereLessThan("eventTime", Timestamp(endDate))
       .get()
       .addOnSuccessListener {documents ->
-        for (document in documents) {
-          dataList.add(ScheduleModel.fromDocument(document.data))
+        if (documents != null) {
+          for (document in documents) {
+            dataList.add(ScheduleModel.fromDocument(document.data))
+          }
+          onComplete(dataList)
+        } else {
+          Application.prefs.setString("currentCalendar", Application.auth.currentUser!!.uid)
+          setupScheduleItems()
         }
-        onComplete(dataList)
       }
       .addOnFailureListener {
         onComplete(listOf())

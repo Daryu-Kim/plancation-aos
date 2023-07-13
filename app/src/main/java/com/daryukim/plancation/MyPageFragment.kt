@@ -139,30 +139,26 @@ class MyPageFragment : Fragment() {
   }
 
   private fun setupUserProfileImage() {
-    db.collection("Users")
-      .document(auth.currentUser?.uid.toString())
-      .get()
-      .addOnSuccessListener { value ->
-        if (value.get("userImagePath") == null) {
-          binding.mypageUserImg.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_user_profile)
-          binding.mypageUserName.text = value.get("userName") as String
-          binding.mypageUserName.visibility = View.VISIBLE
-        } else {
-          Glide.with(requireContext())
-            .asBitmap()
-            .load(value.get("userImagePath") as String)
-            .circleCrop()
-            .into(object : CustomTarget<Bitmap>() {
-              override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                val drawable: Drawable = BitmapDrawable(resources, resource)
-                binding.mypageUserImg.background = drawable
-              }
+    val userPhotoUrl: String = Application.auth.currentUser?.photoUrl?.toString() ?: ""
+    if (userPhotoUrl != "") {
+      Glide.with(requireContext())
+        .asBitmap()
+        .load(userPhotoUrl)
+        .circleCrop()
+        .into(object : CustomTarget<Bitmap>() {
+          override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+            val drawable: Drawable = BitmapDrawable(resources, resource)
+            binding.mypageUserImg.background = drawable
+          }
 
-              override fun onLoadCleared(placeholder: Drawable?) {}
-            })
-          binding.mypageUserName.visibility = View.GONE
-        }
-      }
+          override fun onLoadCleared(placeholder: Drawable?) {}
+        })
+      binding.mypageUserName.visibility = View.GONE
+    } else {
+      binding.mypageUserImg.background = ContextCompat.getDrawable(requireContext(), R.drawable.ic_user_profile)
+      binding.mypageUserName.text = Application.auth.currentUser!!.displayName
+      binding.mypageUserName.visibility = View.VISIBLE
+    }
   }
 
   private fun uploadImageToFirebaseStorage(uri: Uri) {

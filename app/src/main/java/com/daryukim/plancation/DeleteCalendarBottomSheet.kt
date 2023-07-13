@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class DeleteCalendarBottomSheet: BottomSheetDialogFragment() {
   private var _binding: SheetDeleteCalendarBinding? = null
   private val binding get() = _binding!!
+  private lateinit var onClickListener: () -> Unit
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
     _binding = SheetDeleteCalendarBinding.inflate(inflater, container, false)
@@ -21,10 +22,15 @@ class DeleteCalendarBottomSheet: BottomSheetDialogFragment() {
     }
 
     binding.sheetDeleteBtn.setOnClickListener {
+      onClickListener()
       dismiss()
     }
 
     return view
+  }
+
+  fun setOnClickListener(listener: () -> Unit) {
+    onClickListener = listener
   }
 
   // 프래그먼트가 파괴될 때 바인딩을 해제합니다.

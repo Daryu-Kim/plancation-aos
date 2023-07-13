@@ -121,11 +121,15 @@ class TodoFragment: Fragment() {
       .whereLessThan("eventTime", Timestamp(endDate))
       .get()
       .addOnSuccessListener { documents ->
-        for (document in documents) {
-          dataList.add(ScheduleModel.fromDocument(document.data))
+        if (documents != null) {
+          for (document in documents) {
+            dataList.add(ScheduleModel.fromDocument(document.data))
+          }
+          onComplete(dataList)
+        } else {
+          Application.prefs.setString("currentCalendar", Application.auth.currentUser!!.uid)
+          setupTodoItems()
         }
-        onComplete(dataList)
-
       }
       .addOnFailureListener {
         onComplete(listOf())

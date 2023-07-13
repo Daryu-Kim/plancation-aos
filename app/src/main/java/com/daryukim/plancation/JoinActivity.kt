@@ -60,15 +60,24 @@ class JoinActivity : AppCompatActivity() {
   private fun createUserCalendar() {
     Application.db.collection("Calendars")
       .document(Application.auth.currentUser!!.uid)
-      .set({
-        "calendarUsers" to listOf<String>(Application.auth.currentUser!!.uid)
-        "calendarAuthorID" to Application.auth.currentUser!!.uid
-        "calendarTitle" to "내 캘린더"
+      .set(mapOf(
+        "calendarUsers" to listOf(Application.auth.currentUser!!.uid),
+        "calendarAuthorID" to Application.auth.currentUser!!.uid,
+        "calendarTitle" to "내 캘린더",
         "calendarID" to Application.auth.currentUser!!.uid
-      })
+      ))
       .addOnSuccessListener {
-        Application.prefs.setString("currentCalendar", auth.currentUser!!.uid)
-        startActivity(Intent(this, MainActivity::class.java))
+        Application.db.collection("Users")
+          .document(Application.auth.currentUser!!.uid)
+          .set(mapOf(
+            "userID" to Application.auth.currentUser!!.uid,
+            "userImagePath" to null,
+            "userName" to binding.formName.text.toString()
+          ))
+          .addOnSuccessListener {
+            Application.prefs.setString("currentCalendar", auth.currentUser!!.uid)
+            startActivity(Intent(this, MainActivity::class.java))
+          }
       }
   }
 

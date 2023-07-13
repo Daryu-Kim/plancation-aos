@@ -92,6 +92,8 @@ class DeepLinkActivity : AppCompatActivity() {
                   binding.deepLinkAuthor.text = "캘린더 관리자 ${author.data!!["userName"]} 드림"
                 }
               }
+          } else {
+            Toast.makeText(this, "삭제된 캘린더입니다!", Toast.LENGTH_SHORT).show()
           }
         }
       // referrerId와 함께 필요한 작업을 수행합니다.

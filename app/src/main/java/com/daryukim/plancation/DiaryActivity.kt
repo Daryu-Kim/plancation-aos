@@ -49,6 +49,9 @@ class DiaryActivity : AppCompatActivity() {
         .document(data.postAuthorID)
         .get()
         .addOnSuccessListener { value ->
+          if (value.data != null) {
+
+          }
           binding.diaryUserName.text = value.get("userName") as String
           if (value.get("userImagePath") == null) {
             binding.diaryUserImage.background = ContextCompat.getDrawable(this, R.drawable.ic_user_profile)

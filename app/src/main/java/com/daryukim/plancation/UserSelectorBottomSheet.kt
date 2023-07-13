@@ -26,15 +26,7 @@ class UserSelectorBottomSheet(eventUsers: ArrayList<String>) : BottomSheetDialog
     _binding = SheetUserSelectorBinding.inflate(inflater, container, false)
     val view = binding.root
 
-    db.collection("Calendars")
-      .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
-      .get()
-      .addOnSuccessListener { calendar ->
-        if (calendar != null) {
-          calendarUserList = (calendar.data!!["calendarUsers"] as ArrayList<String>)
-          setupUserSelector()
-        }
-      }
+    fetchDataFromFirestore()
 
     binding.userSelectorFormBarCancelButton.setOnClickListener {
       dismiss()
@@ -46,6 +38,21 @@ class UserSelectorBottomSheet(eventUsers: ArrayList<String>) : BottomSheetDialog
     }
 
     return view
+  }
+
+  private fun fetchDataFromFirestore() {
+    db.collection("Calendars")
+      .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
+      .get()
+      .addOnSuccessListener { calendar ->
+        if (calendar != null) {
+          calendarUserList = (calendar.data!!["calendarUsers"] as ArrayList<String>)
+          setupUserSelector()
+        } else {
+          Application.prefs.setString("currentCalendar", Application.auth.currentUser!!.uid)
+          fetchDataFromFirestore()
+        }
+      }
   }
 
   private fun setupUserSelector() {

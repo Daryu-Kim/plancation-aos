@@ -1,6 +1,9 @@
 package com.daryukim.plancation
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +13,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.daryukim.plancation.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.dynamiclinks.ktx.*
@@ -28,11 +34,9 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        setUpCurrentCalendarListView()
-        setUpCurrentCalendarUsersListView()
-
         binding.appBarSidebarBtn.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
+            setupViews()
             openCurrentCalendarList(false)
             openCurrentCalendarUsersList(false)
         }
@@ -85,7 +89,42 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         loadFragment(CalendarFragment())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupViews()
+    }
+
+    private fun setupViews() {
+        setUpCurrentCalendarListView()
+        setUpCurrentCalendarUsersListView()
         setCalendarTitle()
+        setupUserData()
+    }
+
+    private fun setupUserData() {
+        val userPhotoUrl: String = Application.auth.currentUser?.photoUrl?.toString() ?: ""
+        binding.sideUserImgName.text = Application.auth.currentUser!!.displayName
+        binding.sideUserName.text = Application.auth.currentUser!!.displayName
+        if (userPhotoUrl != "") {
+            Glide.with(this)
+                .asBitmap()
+                .load(userPhotoUrl)
+                .circleCrop()
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        val drawable: Drawable = BitmapDrawable(resources, resource)
+                        binding.sideUserImg.background = drawable
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+            binding.sideUserImgName.visibility = View.GONE
+        } else {
+            binding.sideUserImg.background = ContextCompat.getDrawable(this, R.drawable.ic_user_profile)
+            binding.sideUserImgName.visibility = View.VISIBLE
+        }
     }
 
     private fun openCurrentCalendarList(isOpened: Boolean) {
@@ -143,12 +182,16 @@ class MainActivity : AppCompatActivity() {
             .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
             .get()
             .addOnSuccessListener { calendar ->
-                val userList = calendar.data!!["calendarUsers"] as ArrayList<String>
-                Toast.makeText(this, userList.toString(), Toast.LENGTH_SHORT).show()
-                val currentCalendarUsersAdapter = CurrentCalendarUsersAdapter(userList)
-                binding.sideCurrentCalendarUserList.apply {
-                    layoutManager = LinearLayoutManager(this@MainActivity)
-                    adapter = currentCalendarUsersAdapter
+                if (calendar.exists()){
+                    val userList = calendar.data!!["calendarUsers"] as List<String>
+                    val currentCalendarUsersAdapter = CurrentCalendarUsersAdapter(userList)
+                    binding.sideCurrentCalendarUserList.apply {
+                        layoutManager = LinearLayoutManager(this@MainActivity)
+                        adapter = currentCalendarUsersAdapter
+                    }
+                } else {
+                    Application.prefs.setString("currentCalendar", Application.auth.currentUser!!.uid)
+                    setUpCurrentCalendarUsersListView()
                 }
             }
     }
@@ -194,7 +237,7 @@ class MainActivity : AppCompatActivity() {
             .document(Application.prefs.getString("currentCalendar", Application.auth.currentUser!!.uid))
             .get()
             .addOnSuccessListener {
-                if (it.data != null) {
+                if (it.exists()) {
                     binding.appBarTitle.text = it.data!!["calendarTitle"].toString()
                 }
             }

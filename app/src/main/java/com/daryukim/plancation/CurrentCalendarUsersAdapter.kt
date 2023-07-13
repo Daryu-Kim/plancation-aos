@@ -35,31 +35,38 @@ class CurrentCalendarUsersAdapter(
   @SuppressLint("ResourceType", "SetTextI18n")
   override fun onBindViewHolder(holder: CurrentCalendarUsersViewHolder, @SuppressLint("RecyclerView") position: Int) {
     calendarUser = calendarUserList[position]
+    setupViewHolder(holder, position)
+  }
 
+  private fun setupViewHolder(holder: CurrentCalendarUsersViewHolder, @SuppressLint("RecyclerView") position: Int) {
     Application.db.collection("Users")
       .document(calendarUserList[position])
       .get()
       .addOnSuccessListener { user ->
-        if (user.get("userImagePath") == null) {
-          holder.itemImg.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_user_profile)
-          holder.itemImgName.text = user.get("userName") as String
-          holder.itemImgName.visibility = View.VISIBLE
+        if (user.data != null) {
+          if (user.get("userImagePath") == null) {
+            holder.itemImg.background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.ic_user_profile)
+            holder.itemImgName.text = user.get("userName") as String
+            holder.itemImgName.visibility = View.VISIBLE
+          } else {
+            Glide.with(holder.itemView.context)
+              .asBitmap()
+              .load(user.get("userImagePath") as String)
+              .circleCrop()
+              .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                  val drawable: Drawable = BitmapDrawable(holder.itemView.resources, resource)
+                  holder.itemImg.background = drawable
+                }
+                override fun onLoadCleared(placeholder: Drawable?) {}
+              })
+            holder.itemImgName.visibility = View.GONE
+          }
+          holder.itemName.text = user["userName"].toString()
         } else {
-          Glide.with(holder.itemView.context)
-            .asBitmap()
-            .load(user.get("userImagePath") as String)
-            .circleCrop()
-            .into(object : CustomTarget<Bitmap>() {
-              override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                val drawable: Drawable = BitmapDrawable(holder.itemView.resources, resource)
-                holder.itemImg.background = drawable
-              }
-
-              override fun onLoadCleared(placeholder: Drawable?) {}
-            })
-          holder.itemImgName.visibility = View.GONE
+          Application.prefs.setString("currentCalendar", Application.auth.currentUser!!.uid)
+          setupViewHolder(holder, position)
         }
-        holder.itemName.text = user["userName"].toString()
       }
   }
 

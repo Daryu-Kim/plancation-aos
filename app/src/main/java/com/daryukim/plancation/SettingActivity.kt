@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.daryukim.plancation.databinding.ActivitySettingBinding
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -16,6 +18,7 @@ class SettingActivity : AppCompatActivity() {
   private lateinit var binding: ActivitySettingBinding
   private var isOpenedAlertTimePicker = false
   private var isOpenedDeleteCalendarPicker = false
+  private var authorCalendarList: ArrayList<CalendarModel> = arrayListOf()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -67,11 +70,23 @@ class SettingActivity : AppCompatActivity() {
   }
 
   private fun setupDeleteCalendar() {
-
-  }
-
-  private fun getAuthorCalendarData() {
     Application.db.collection("Calendars")
+      .whereArrayContains("calendarUsers", Application.auth.currentUser!!.uid)
+      .get()
+      .addOnSuccessListener {documents ->
+        authorCalendarList.clear()
+        for (document in documents) {
+          authorCalendarList.add(CalendarModel.fromDocument(document.data))
+        }
+        val deleteCalendarAdapter = DeleteCalendarAdapter(authorCalendarList, this)
+        deleteCalendarAdapter.setOnClickListener { selectedCalendar ->
+          deleteCalendar(selectedCalendar)
+        }
+        binding.settingDeleteCalendarList.apply {
+          layoutManager = LinearLayoutManager(this@SettingActivity)
+          adapter = deleteCalendarAdapter
+        }
+      }
   }
 
   private fun saveAlertTimePicker() {
@@ -81,5 +96,33 @@ class SettingActivity : AppCompatActivity() {
     Application.prefs.setString("alertTime", timeString)
     binding.settingAlertTime.text = timeString
     toggleAlertTimePicker()
+  }
+
+  private fun deleteCalendar(calendar: CalendarModel) {
+    Application.db.collection("Calendars")
+      .document(calendar.calendarID)
+      .collection("Events")
+      .get()
+      .addOnSuccessListener { events ->
+        events.forEach { event ->
+          event.reference.delete()
+        }
+        Application.db.collection("Calendars")
+          .document(calendar.calendarID)
+          .collection("Posts")
+          .get()
+          .addOnSuccessListener { posts ->
+            posts.forEach { post ->
+              post.reference.delete()
+            }
+            Application.db.collection("Calendars")
+              .document(calendar.calendarID)
+              .delete()
+              .addOnSuccessListener {
+                Toast.makeText(this, "${calendar.calendarTitle} 캘린더를 삭제하였습니다!", Toast.LENGTH_SHORT).show()
+                setupDeleteCalendar()
+              }
+          }
+      }
   }
 }
