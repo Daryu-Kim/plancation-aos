@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.DatePicker
@@ -133,6 +134,12 @@ class ScheduleFormFragment : BottomSheetDialogFragment() {
       binding.scheduleFormBarTitle.text = "새로운 이벤트"
       binding.scheduleFormBarSubmitButton.text = "등록"
       onDayButtonClick()
+    }
+    binding.scheduleFormContentLocationEdittext.setOnEditorActionListener { v, actionId, event ->
+      if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+        fetchCoordinatesFromAddress(binding.scheduleFormContentLocationEdittext.text.toString())
+      }
+      return@setOnEditorActionListener false
     }
   }
 

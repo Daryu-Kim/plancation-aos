@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_height="match_parent">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/background"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@color/inverse_primary"
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="24dp"
+                android:id="@+id/app_bar_layout">
+
+            <ImageButton
+                    android:layout_width="28dp" android:layout_height="28dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/app_bar_cancel"
+                    android:background="@drawable/ic_prev"
+                    android:backgroundTint="@color/white"
+                    android:layout_alignParentStart="true"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="검색"
+                      android:background="@color/inverse_primary"
+                      android:id="@+id/app_bar_title"
+                      android:fontFamily="@font/bold"
+                      android:textColor="@color/white"
+                      android:textSize="18sp" android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      android:paddingVertical="16dp"
+                      android:paddingHorizontal="24dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="42dp"
+                          android:background="@drawable/form_edittext"
+                          android:paddingHorizontal="8dp"
+                          android:gravity="center|center_vertical"
+                          android:orientation="horizontal">
+                <ImageView android:layout_width="32dp" android:layout_height="32dp"
+                           android:background="@drawable/ic_search"
+                           android:backgroundTint="@color/primary"/>
+                <EditText android:layout_width="0dp" android:layout_height="match_parent"
+                          android:layout_weight="1"
+                          android:id="@+id/search_title_edit"
+                          android:background="@android:color/transparent"
+                          android:hint="검색할 내용을 입력해주세요!"
+                          android:layout_marginStart="8dp"
+                          android:imeOptions="actionSearch"
+                          android:inputType="text"
+                          android:textColorHint="@color/hint_text"
+                          android:textColor="@color/text"
+                          android:fontFamily="@font/medium"
+                          android:textSize="16sp"/>
+                <ImageButton android:layout_width="32dp" android:layout_height="32dp"
+                             android:background="@drawable/ic_close"
+                             android:backgroundTint="@color/accent"
+                             android:id="@+id/search_title_remove"
+                             android:layout_marginStart="8dp"
+                             android:visibility="gone"/>
+            </LinearLayout>
+
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                            android:layout_marginTop="24dp"
+                            android:id="@+id/search_result_layout">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:gravity="center"
+                              android:id="@+id/search_result_empty"
+                              android:visibility="gone"
+                              android:layout_centerInParent="true"
+                              android:orientation="vertical">
+                    <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:backgroundTint="@color/accent"
+                            android:background="@drawable/ic_error"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:text="검색 결과가 없습니다!"
+                              android:textAlignment="center"
+                              android:textSize="18sp"
+                              android:textColor="@color/primary"
+                              android:fontFamily="@font/bold"
+                              android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                           android:layout_height="match_parent"
+                                                           android:id="@+id/search_result_rv"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <ProgressBar
+            android:id="@+id/search_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:theme="@style/Widget.AppCompat.ProgressBar"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+    />
+</RelativeLayout>

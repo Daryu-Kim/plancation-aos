@@ -47,6 +47,8 @@
                   android:background="@android:color/transparent"
                   android:hint="일정 제목을 입력해주세요!"
                   android:id="@+id/ai_result_item_title"
+                  android:imeOptions="actionDone"
+                  android:inputType="text"
                   android:layout_marginHorizontal="8dp"
                   android:textSize="14sp"
                   android:textColor="@color/text"

@@ -199,6 +199,8 @@
                 <EditText android:layout_width="match_parent" android:layout_height="48dp"
                           android:background="@drawable/form_edittext"
                           android:hint="Ex) 제주도 여행, 개발 일정, 발표 준비 등"
+                          android:inputType="text"
+                          android:imeOptions="actionDone"
                           android:textSize="14sp"
                           android:textColor="@color/text"
                           android:id="@+id/ai_form_prompt"

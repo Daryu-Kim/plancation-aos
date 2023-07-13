@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/form_id"
                     android:hint="이메일"
+                    android:imeOptions="actionNext"
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/medium"
                     android:textSize="16sp"
@@ -54,6 +55,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
+                    android:imeOptions="actionDone"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
                     android:id="@+id/form_pw"

@@ -62,6 +62,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/form_id"
                         android:hint="이메일"
+                        android:imeOptions="actionNext"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/medium"
                         android:textSize="16sp"
@@ -78,6 +79,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/form_name"
                         android:hint="이름"
+                        android:imeOptions="actionNext"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/medium"
                         android:textSize="16sp"
@@ -100,6 +102,7 @@
                         android:id="@+id/form_pw"
                         android:hint="비밀번호"
                         android:fontFamily="@font/medium"
+                        android:imeOptions="actionNext"
                         android:textSize="16sp"
                         android:textColor="@color/text"
                         android:inputType="textPassword"/>
@@ -123,6 +126,7 @@
                         android:fontFamily="@font/medium"
                         android:textSize="16sp"
                         android:textColor="@color/text"
+                        android:imeOptions="actionDone"
                         android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>

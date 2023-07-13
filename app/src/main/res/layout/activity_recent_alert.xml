@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_height="match_parent">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/background"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@color/inverse_primary"
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="24dp"
+                android:id="@+id/app_bar_layout">
+
+            <ImageButton
+                    android:layout_width="28dp" android:layout_height="28dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/app_bar_cancel"
+                    android:background="@drawable/ic_close"
+                    android:backgroundTint="@color/white"
+                    android:layout_alignParentStart="true"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="알림"
+                      android:background="@color/inverse_primary"
+                      android:id="@+id/app_bar_title"
+                      android:fontFamily="@font/bold"
+                      android:textColor="@color/white"
+                      android:textSize="18sp" android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:layout_width="match_parent"
+                                                               android:layout_height="match_parent"
+                                                               android:id="@+id/recent_alert_refresh"
+                                                               android:paddingVertical="16dp"
+                                                               android:paddingHorizontal="24dp">
+            <androidx.recyclerview.widget.RecyclerView android:layout_width="match_parent"
+                                                       android:id="@+id/recent_alert_rv"
+                                                       android:layout_height="match_parent"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+    <ProgressBar
+            android:id="@+id/diary_form_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:theme="@style/Widget.AppCompat.ProgressBar"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+    />
+</RelativeLayout>
