@@ -2,7 +2,6 @@ package com.daryukim.plancation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.daryukim.plancation.databinding.FragmentCalendarBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -40,8 +37,13 @@ class CalendarFragment: Fragment() {
     _binding = FragmentCalendarBinding.inflate(inflater, container, false)
     val view = binding.root
 
-    // 오늘의 날짜를 설정합니다.
-    CalendarUtil.selectedDate.value = LocalDate.now()
+    val data: ScheduleModel? = arguments?.getParcelable("data")
+
+    if (data != null) {
+      CalendarUtil.selectedDate.value = data.eventTime.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    } else {
+      CalendarUtil.selectedDate.value = LocalDate.now()
+    }
 
     // 월별 캘린더 뷰를 설정합니다.
     setMonthView()

@@ -51,9 +51,11 @@
                           app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton android:layout_width="28dp" android:layout_height="28dp"
+                             android:id="@+id/app_bar_search"
                              android:background="@drawable/ic_search"/>
                 <ImageButton android:layout_width="28dp" android:layout_height="28dp"
                              android:layout_marginStart="8dp"
+                             android:id="@+id/app_bar_alert"
                              android:background="@drawable/ic_info"/>
             </LinearLayout>
 

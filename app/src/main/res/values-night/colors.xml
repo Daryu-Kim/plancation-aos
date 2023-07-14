@@ -16,4 +16,5 @@
     <color name="background">#161625</color>
     <color name="disabled">#666</color>
     <color name="divider">#363645</color>
+    <color name="form_background">#363645</color>
 </resources>

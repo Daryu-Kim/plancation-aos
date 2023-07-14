@@ -33,7 +33,13 @@ class TodoFragment: Fragment() {
     // 바인딩 객체를 생성하고 화면 레이아웃을 동적으로 연결합니다.
     _binding = FragmentTodoBinding.inflate(inflater, container, false)
     val view = binding.root
-    TodoUtil.selectedDate.value = LocalDate.now()
+    val data: ScheduleModel? = arguments?.getParcelable("data")
+
+    if (data != null) {
+      TodoUtil.selectedDate.value = data.eventTime.toDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    } else {
+      TodoUtil.selectedDate.value = LocalDate.now()
+    }
 
     TodoUtil.selectedDate.observe(viewLifecycleOwner, Observer { value ->
       binding.todoDateTitle.text = TodoUtil.selectedDate.value!!.format(DateTimeFormatter.ofPattern("yyyy년 MM월"))

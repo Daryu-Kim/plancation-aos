@@ -37,6 +37,8 @@
         <activity android:name=".AIResultActivity" android:exported="true"/>
         <activity android:name=".SettingActivity" android:exported="true"/>
         <activity android:name=".ChangePWActivity" android:exported="true"/>
+        <activity android:name=".RecentAlertActivity" android:exported="true"/>
+        <activity android:name=".SearchActivity" android:exported="true"/>
         <activity
                 android:name=".DeepLinkActivity"
                 android:label="캘린더 초대 링크"

@@ -1,5 +1,6 @@
 package com.daryukim.plancation
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity() {
     private var isOpenedCurrentCalendarUsers = false
     private var calendarList: ArrayList<CalendarModel> = ArrayList()
     private var backPressedTime : Long = 0
+    private val searchActivityRequestCode = 1
+    private val alertActivityRequestCode = 2
+    private var resultModel: ScheduleModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -39,6 +43,14 @@ class MainActivity : AppCompatActivity() {
             setupViews()
             openCurrentCalendarList(false)
             openCurrentCalendarUsersList(false)
+        }
+
+        binding.appBarSearch.setOnClickListener {
+            startActivityForResult(Intent(this, SearchActivity::class.java), searchActivityRequestCode)
+        }
+
+        binding.appBarAlert.setOnClickListener {
+            startActivityForResult(Intent(this, RecentAlertActivity::class.java), alertActivityRequestCode)
         }
 
         binding.sideSettingBtn.setOnClickListener {
@@ -218,11 +230,17 @@ class MainActivity : AppCompatActivity() {
             if (selectedItem == R.id.nav_calendar) {
                 setCalendarTitle()
             }
+            if (selectedItem == R.id.nav_calendar || selectedItem == R.id.nav_todo) {
+                selectedFragment.arguments = Bundle().apply {
+                    putParcelable("data", resultModel)
+                }
+            }
             loadFragment(selectedFragment)
         } else {
             val selectedFragment: Fragment = when (selectedItem) {
                 R.id.nav_calendar -> CalendarFragment()
                 R.id.nav_todo -> TodoFragment()
+                R.id.nav_ai -> AIFragment()
                 R.id.nav_diary -> DiaryFragment()
                 R.id.nav_my -> MyPageFragment()
                 else -> CalendarFragment()
@@ -267,5 +285,24 @@ class MainActivity : AppCompatActivity() {
 
         Toast.makeText(this, "한번 더 뒤로가기 하시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
         backPressedTime = System.currentTimeMillis()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == searchActivityRequestCode && resultCode == Activity.RESULT_OK) {
+
+        }
+
+        if (requestCode == alertActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            val resultFragment = data?.getIntExtra("resultFragment", R.id.nav_calendar)
+            resultModel = data?.getParcelableExtra("resultModel")
+
+            if (resultFragment != null && resultModel != null) {
+                binding.bottomNavigation.selectedItemId = resultFragment
+            }
+
+        }
     }
 }
