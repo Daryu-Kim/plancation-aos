@@ -292,7 +292,12 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == searchActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            val resultFragment = data?.getIntExtra("resultFragment", R.id.nav_calendar)
+            resultModel = data?.getParcelableExtra("resultModel")
 
+            if (resultFragment != null && resultModel != null) {
+                binding.bottomNavigation.selectedItemId = resultFragment
+            }
         }
 
         if (requestCode == alertActivityRequestCode && resultCode == Activity.RESULT_OK) {
